@@ -169,6 +169,7 @@
             padding: 15px;
             border-bottom: 1px solid #e9ecef;
             transition: background 0.3s ease;
+            vertical-align: top;
         }
 
         .risk-table tr:hover {
@@ -192,14 +193,24 @@
             color: white;
         }
 
-        .impact-level.signifikan {
-            background: #e74c3c;
-            color: white;
+        .mitigation-list-cell {
+            list-style: none;
+            padding: 0;
+            margin: 0;
         }
 
-        .impact-level.moderat {
-            background: #f39c12;
-            color: white;
+        .mitigation-list-cell li {
+            background: #f8f9fa;
+            margin-bottom: 8px;
+            padding: 8px 12px;
+            border-radius: 6px;
+            border-left: 3px solid #3498db;
+            font-size: 0.9rem;
+            line-height: 1.4;
+        }
+
+        .mitigation-list-cell li:last-child {
+            margin-bottom: 0;
         }
 
         .selector-container {
@@ -284,6 +295,90 @@
                 grid-template-columns: 1fr !important;
                 gap: 15px !important;
             }
+
+            .container {
+                margin: 10px;
+                border-radius: 15px;
+            }
+
+            .header {
+                padding: 20px 15px;
+            }
+
+            .header h1 {
+                font-size: 1.8rem;
+            }
+
+            .header p {
+                font-size: 1rem;
+            }
+
+            .tab-content {
+                padding: 20px 15px;
+            }
+
+            .chart-card {
+                padding: 20px 15px;
+            }
+
+            .table-container {
+                overflow-x: auto;
+                -webkit-overflow-scrolling: touch;
+            }
+
+            .risk-table {
+                min-width: 800px;
+                font-size: 0.85rem;
+            }
+
+            .risk-table th,
+            .risk-table td {
+                padding: 10px 8px;
+            }
+
+            .mitigation-list-cell li {
+                font-size: 0.8rem;
+                padding: 6px 10px;
+            }
+
+            .selector-card {
+                padding: 20px 15px;
+            }
+
+            .result-card {
+                padding: 20px 15px;
+            }
+        }
+
+        @media (max-width: 1024px) and (min-width: 769px) {
+            .charts-container {
+                grid-template-columns: 1fr 1fr;
+            }
+
+            .filter-container {
+                grid-template-columns: 1fr 1fr 1fr !important;
+                gap: 15px !important;
+            }
+
+            .container {
+                margin: 15px;
+            }
+
+            .header h1 {
+                font-size: 2.2rem;
+            }
+
+            .tab-content {
+                padding: 25px 20px;
+            }
+
+            .table-container {
+                overflow-x: auto;
+            }
+
+            .risk-table {
+                font-size: 0.9rem;
+            }
         }
 
         @media (max-width: 1200px) {
@@ -293,6 +388,56 @@
 
             .filter-container {
                 grid-template-columns: 1fr 1fr !important;
+            }
+        }
+
+        @media (max-width: 480px) {
+            body {
+                padding: 5px;
+            }
+
+            .container {
+                margin: 5px;
+                border-radius: 10px;
+            }
+
+            .header {
+                padding: 15px 10px;
+            }
+
+            .header h1 {
+                font-size: 1.5rem;
+            }
+
+            .header p {
+                font-size: 0.9rem;
+            }
+
+            .nav-tab {
+                font-size: 0.8rem;
+                padding: 12px 8px;
+            }
+
+            .tab-content {
+                padding: 15px 10px;
+            }
+
+            .chart-card, .selector-card, .result-card {
+                padding: 15px 10px;
+            }
+
+            .filter-select {
+                font-size: 0.85rem;
+                padding: 8px 12px;
+            }
+
+            .risk-table {
+                font-size: 0.8rem;
+            }
+
+            .risk-table th,
+            .risk-table td {
+                padding: 8px 6px;
             }
         }
     </style>
@@ -393,12 +538,12 @@
                 <table class="risk-table">
                     <thead>
                         <tr>
-                            <th>No</th>
-                            <th>Tahap</th>
-                            <th>Risiko</th>
-                            <th>Kemungkinan</th>
-                            <th>Dampak</th>
-                            <th>Status</th>
+                            <th style="width: 50px;">No</th>
+                            <th style="width: 100px;">Tahap</th>
+                            <th style="width: 300px;">Risiko</th>
+                            <th style="width: 130px;">Kemungkinan</th>
+                            <th style="width: 100px;">Dampak</th>
+                            <th>Mitigasi</th>
                         </tr>
                     </thead>
                     <tbody id="riskTableBody">
@@ -731,15 +876,19 @@
 
             sortedData.forEach((risk, index) => {
                 const row = document.createElement('tr');
-                const riskScore = getRiskScore(risk.kemungkinan, risk.dampak);
+                
+                // Create mitigation list HTML
+                const mitigasiHtml = risk.mitigasi.map(mitigation => 
+                    `<li>${mitigation}</li>`
+                ).join('');
                 
                 row.innerHTML = `
                     <td>${index + 1}</td>
                     <td>${risk.tahap}</td>
                     <td>${risk.risiko}</td>
                     <td><span class="risk-level ${risk.kemungkinan.toLowerCase().replace(' ', '-')}">${risk.kemungkinan}</span></td>
-                    <td><span class="impact-level ${risk.dampak.toLowerCase()}">${risk.dampak}</span></td>
-                    <td><span class="risk-level ${riskScore.class}">${riskScore.level}</span></td>
+                    <td>${risk.dampak}</td>
+                    <td><ul class="mitigation-list-cell">${mitigasiHtml}</ul></td>
                 `;
                 tableBody.appendChild(row);
             });
