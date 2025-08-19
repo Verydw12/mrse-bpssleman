@@ -1,0 +1,826 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard Manajemen Risiko</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.9.1/chart.min.js"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 20px;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+            backdrop-filter: blur(10px);
+            overflow: hidden;
+        }
+
+        .header {
+            background: linear-gradient(135deg, #2c3e50, #3498db);
+            color: white;
+            padding: 30px;
+            text-align: center;
+        }
+
+        .header h1 {
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+        }
+
+        .header p {
+            font-size: 1.1rem;
+            opacity: 0.9;
+        }
+
+        .nav-tabs {
+            display: flex;
+            background: #f8f9fa;
+            border-bottom: 3px solid #e9ecef;
+        }
+
+        .nav-tab {
+            flex: 1;
+            padding: 20px;
+            background: none;
+            border: none;
+            font-size: 1.1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            position: relative;
+        }
+
+        .nav-tab:hover {
+            background: #e9ecef;
+            transform: translateY(-2px);
+        }
+
+        .nav-tab.active {
+            background: white;
+            color: #3498db;
+            box-shadow: 0 -3px 0 #3498db;
+        }
+
+        .tab-content {
+            display: none;
+            padding: 30px;
+            animation: fadeIn 0.5s ease-in;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .charts-container {
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr;
+            gap: 30px;
+            margin-bottom: 30px;
+        }
+
+        .chart-filter {
+            margin-bottom: 15px;
+            text-align: center;
+        }
+
+        .filter-select {
+            padding: 8px 15px;
+            border: 2px solid #e9ecef;
+            border-radius: 20px;
+            font-size: 0.9rem;
+            background: white;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            width: 100%;
+            max-width: 200px;
+        }
+
+        .filter-select:focus {
+            outline: none;
+            border-color: #3498db;
+            box-shadow: 0 0 0 2px rgba(52, 152, 219, 0.1);
+        }
+
+        .chart-card {
+            background: white;
+            padding: 25px;
+            border-radius: 15px;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+            transition: transform 0.3s ease;
+        }
+
+        .chart-card:hover {
+            transform: translateY(-5px);
+        }
+
+        .chart-card h3 {
+            text-align: center;
+            margin-bottom: 20px;
+            color: #2c3e50;
+            font-size: 1.3rem;
+        }
+
+        .chart-container {
+            position: relative;
+            height: 300px;
+        }
+
+        .table-container {
+            background: white;
+            border-radius: 15px;
+            overflow: hidden;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+        }
+
+        .risk-table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        .risk-table th {
+            background: linear-gradient(135deg, #3498db, #2980b9);
+            color: white;
+            padding: 15px;
+            text-align: left;
+            font-weight: 600;
+        }
+
+        .risk-table td {
+            padding: 15px;
+            border-bottom: 1px solid #e9ecef;
+            transition: background 0.3s ease;
+        }
+
+        .risk-table tr:hover {
+            background: #f8f9fa;
+        }
+
+        .risk-level {
+            padding: 5px 12px;
+            border-radius: 20px;
+            font-weight: 600;
+            font-size: 0.9rem;
+        }
+
+        .risk-level.sering {
+            background: #e74c3c;
+            color: white;
+        }
+
+        .risk-level.kadang {
+            background: #f39c12;
+            color: white;
+        }
+
+        .impact-level.signifikan {
+            background: #e74c3c;
+            color: white;
+        }
+
+        .impact-level.moderat {
+            background: #f39c12;
+            color: white;
+        }
+
+        .selector-container {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 30px;
+            margin-bottom: 30px;
+        }
+
+        .selector-card {
+            background: white;
+            padding: 25px;
+            border-radius: 15px;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+        }
+
+        .selector-card h3 {
+            margin-bottom: 15px;
+            color: #2c3e50;
+        }
+
+        select {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #e9ecef;
+            border-radius: 8px;
+            font-size: 1rem;
+            transition: border-color 0.3s ease;
+        }
+
+        select:focus {
+            outline: none;
+            border-color: #3498db;
+        }
+
+        .result-card {
+            background: white;
+            padding: 25px;
+            border-radius: 15px;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+            margin-top: 20px;
+        }
+
+        .result-card h3 {
+            color: #2c3e50;
+            margin-bottom: 15px;
+        }
+
+        .mitigation-list {
+            list-style: none;
+        }
+
+        .mitigation-list li {
+            background: #f8f9fa;
+            margin-bottom: 10px;
+            padding: 15px;
+            border-radius: 8px;
+            border-left: 4px solid #3498db;
+            transition: transform 0.2s ease;
+        }
+
+        .mitigation-list li:hover {
+            transform: translateX(5px);
+        }
+
+        @media (max-width: 768px) {
+            .charts-container,
+            .selector-container {
+                grid-template-columns: 1fr;
+            }
+            
+            .nav-tab {
+                font-size: 0.9rem;
+                padding: 15px 10px;
+            }
+
+            .charts-container {
+                grid-template-columns: 1fr;
+            }
+
+            .filter-container {
+                grid-template-columns: 1fr !important;
+                gap: 15px !important;
+            }
+        }
+
+        @media (max-width: 1200px) {
+            .charts-container {
+                grid-template-columns: 1fr 1fr;
+            }
+
+            .filter-container {
+                grid-template-columns: 1fr 1fr !important;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>Dashboard Manajemen Risiko</h1>
+            <p>Sistem Monitoring dan Analisis Risiko Organisasi</p>
+        </div>
+
+        <div class="nav-tabs">
+            <button class="nav-tab active" onclick="showTab('charts')">
+                📊 Grafik Risiko
+            </button>
+            <button class="nav-tab" onclick="showTab('table')">
+                📋 Tabel Risiko
+            </button>
+            <button class="nav-tab" onclick="showTab('mitigasi')">
+                🛡️ Mitigasi Risiko
+            </button>
+        </div>
+
+        <!-- Tab 1: Grafik -->
+        <div id="charts" class="tab-content active">
+            <div class="charts-container">
+                <div class="chart-card">
+                    <h3>Distribusi Tingkat Kemungkinan</h3>
+                    <div class="chart-filter">
+                        <select id="kemungkinanFilter" class="filter-select" onchange="updateKemungkinanChart()">
+                            <option value="">Semua Tahapan</option>
+                            <option value="Persiapan">Persiapan</option>
+                            <option value="Pelaksanaan">Pelaksanaan</option>
+                        </select>
+                    </div>
+                    <div class="chart-container">
+                        <canvas id="kemungkinanChart"></canvas>
+                    </div>
+                </div>
+                <div class="chart-card">
+                    <h3>Distribusi Tingkat Dampak</h3>
+                    <div class="chart-filter">
+                        <select id="dampakFilter" class="filter-select" onchange="updateDampakChart()">
+                            <option value="">Semua Tahapan</option>
+                            <option value="Persiapan">Persiapan</option>
+                            <option value="Pelaksanaan">Pelaksanaan</option>
+                        </select>
+                    </div>
+                    <div class="chart-container">
+                        <canvas id="dampakChart"></canvas>
+                    </div>
+                </div>
+                <div class="chart-card">
+                    <h3>Kombinasi Kemungkinan & Dampak</h3>
+                    <div class="chart-filter">
+                        <select id="kombinasiFilter" class="filter-select" onchange="updateKombinasiChart()">
+                            <option value="">Semua Tahapan</option>
+                            <option value="Persiapan">Persiapan</option>
+                            <option value="Pelaksanaan">Pelaksanaan</option>
+                        </select>
+                    </div>
+                    <div class="chart-container">
+                        <canvas id="kombinasiChart"></canvas>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Tab 2: Tabel -->
+        <div id="table" class="tab-content">
+            <div class="filter-container" style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 20px; background: white; padding: 20px; border-radius: 15px; box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1); margin-bottom: 30px;">
+                <div>
+                    <label style="display: block; margin-bottom: 8px; font-weight: 600; color: #2c3e50;">Filter Tahap:</label>
+                    <select id="tableFilterTahap" class="filter-select" onchange="updateTable()" style="width: 100%; max-width: none;">
+                        <option value="">Semua Tahapan</option>
+                        <option value="Persiapan">Persiapan</option>
+                        <option value="Pelaksanaan">Pelaksanaan</option>
+                    </select>
+                </div>
+                <div>
+                    <label style="display: block; margin-bottom: 8px; font-weight: 600; color: #2c3e50;">Filter Kemungkinan:</label>
+                    <select id="tableFilterKemungkinan" class="filter-select" onchange="updateTable()" style="width: 100%; max-width: none;">
+                        <option value="">Semua Kemungkinan</option>
+                        <option value="Sering Terjadi">Sering Terjadi</option>
+                        <option value="Kadang Terjadi">Kadang Terjadi</option>
+                    </select>
+                </div>
+                <div>
+                    <label style="display: block; margin-bottom: 8px; font-weight: 600; color: #2c3e50;">Filter Dampak:</label>
+                    <select id="tableFilterDampak" class="filter-select" onchange="updateTable()" style="width: 100%; max-width: none;">
+                        <option value="">Semua Dampak</option>
+                        <option value="Signifikan">Signifikan</option>
+                        <option value="Moderat">Moderat</option>
+                    </select>
+                </div>
+            </div>
+            <div class="table-container">
+                <table class="risk-table">
+                    <thead>
+                        <tr>
+                            <th>No</th>
+                            <th>Tahap</th>
+                            <th>Risiko</th>
+                            <th>Kemungkinan</th>
+                            <th>Dampak</th>
+                            <th>Status</th>
+                        </tr>
+                    </thead>
+                    <tbody id="riskTableBody">
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- Tab 3: Mitigasi -->
+        <div id="mitigasi" class="tab-content">
+            <div class="selector-container">
+                <div class="selector-card">
+                    <h3>Pilih Tahapan</h3>
+                    <select id="tahapSelect" onchange="updateRisiko()">
+                        <option value="">-- Pilih Tahapan --</option>
+                        <option value="Persiapan">Persiapan</option>
+                        <option value="Pelaksanaan">Pelaksanaan</option>
+                    </select>
+                </div>
+                <div class="selector-card">
+                    <h3>Pilih Risiko</h3>
+                    <select id="risikoSelect" onchange="showMitigasi()">
+                        <option value="">-- Pilih Risiko --</option>
+                    </select>
+                </div>
+            </div>
+            <div id="mitigasiResult" class="result-card" style="display: none;">
+                <h3>Strategi Mitigasi</h3>
+                <ul id="mitigasiList" class="mitigation-list">
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Data risiko
+        const riskData = [
+            {
+                tahap: "Persiapan",
+                risiko: "Blok Sensus / SLS yang menjadi sampel sudah jenuh atau non respon",
+                kemungkinan: "Sering Terjadi",
+                dampak: "Signifikan",
+                mitigasi: [
+                    "Bersurat ke BPS Provinsi, mengajukan pergantian Blok Sensus/ SLS sampel"
+                ]
+            },
+            {
+                tahap: "Pelaksanaan",
+                risiko: "Aplikasi galat saat pelaksanaan kegiatan",
+                kemungkinan: "Kadang Terjadi",
+                dampak: "Moderat",
+                mitigasi: [
+                    "Menginformasikan galat aplikasi kepada PIC Provinsi"
+                ]
+            },
+            {
+                tahap: "Pelaksanaan",
+                risiko: "Kesulitan menemui responden di wilayah kos-kosan",
+                kemungkinan: "Sering Terjadi",
+                dampak: "Signifikan",
+                mitigasi: [
+                    "Mendatangi responden di jam-jam tertentu yang memungkinkan dia berada di tempat",
+                    "Membuat surat tugas dan surat ke responden menjadi satu lembar kemudian ditinggalkan di dalam kamar kostnya",
+                    "Meminta bantuan dari pemilik kost untuk memberitahukan kepada anak kostnya"
+                ]
+            }
+        ];
+
+        // Inisialisasi dashboard
+        function initDashboard() {
+            createCharts();
+            populateTable();
+            populateTahapSelect();
+        }
+
+        // Fungsi untuk memfilter data berdasarkan tahapan
+        function getFilteredData(filterId) {
+            const filter = document.getElementById(filterId).value;
+            if (!filter) return riskData;
+            return riskData.filter(risk => risk.tahap === filter);
+        }
+
+        // Update individual charts
+        function updateKemungkinanChart() {
+            createKemungkinanChart();
+        }
+
+        function updateDampakChart() {
+            createDampakChart();
+        }
+
+        function updateKombinasiChart() {
+            createKombinasiChart();
+        }
+
+        // Update table dengan filter
+        function updateTable() {
+            populateTable();
+        }
+
+        // Fungsi untuk memfilter data tabel
+        function getFilteredTableData() {
+            const tahapFilter = document.getElementById('tableFilterTahap').value;
+            const kemungkinanFilter = document.getElementById('tableFilterKemungkinan').value;
+            const dampakFilter = document.getElementById('tableFilterDampak').value;
+
+            return riskData.filter(risk => {
+                const tahapMatch = !tahapFilter || risk.tahap === tahapFilter;
+                const kemungkinanMatch = !kemungkinanFilter || risk.kemungkinan === kemungkinanFilter;
+                const dampakMatch = !dampakFilter || risk.dampak === dampakFilter;
+
+                return tahapMatch && kemungkinanMatch && dampakMatch;
+            });
+        }
+
+        // Fungsi untuk menampilkan tab
+        function showTab(tabName) {
+            // Sembunyikan semua tab
+            const tabs = document.querySelectorAll('.tab-content');
+            tabs.forEach(tab => tab.classList.remove('active'));
+            
+            const navTabs = document.querySelectorAll('.nav-tab');
+            navTabs.forEach(tab => tab.classList.remove('active'));
+            
+            // Tampilkan tab yang dipilih
+            document.getElementById(tabName).classList.add('active');
+            event.target.classList.add('active');
+        }
+
+        // Global variables untuk menyimpan chart instances
+        let kemungkinanChartInstance = null;
+        let dampakChartInstance = null;
+        let kombinasiChartInstance = null;
+
+        // Membuat semua grafik pie chart
+        function createCharts() {
+            createKemungkinanChart();
+            createDampakChart();
+            createKombinasiChart();
+        }
+
+        // Chart Kemungkinan
+        function createKemungkinanChart() {
+            const filteredData = getFilteredData('kemungkinanFilter');
+            const kemungkinanData = {};
+            
+            filteredData.forEach(risk => {
+                kemungkinanData[risk.kemungkinan] = (kemungkinanData[risk.kemungkinan] || 0) + 1;
+            });
+
+            // Destroy existing chart jika ada
+            if (kemungkinanChartInstance) kemungkinanChartInstance.destroy();
+
+            const kemungkinanCtx = document.getElementById('kemungkinanChart').getContext('2d');
+            kemungkinanChartInstance = new Chart(kemungkinanCtx, {
+                type: 'pie',
+                data: {
+                    labels: Object.keys(kemungkinanData),
+                    datasets: [{
+                        data: Object.values(kemungkinanData),
+                        backgroundColor: [
+                            '#e74c3c',
+                            '#f39c12',
+                            '#3498db',
+                            '#2ecc71'
+                        ],
+                        borderWidth: 3,
+                        borderColor: '#fff'
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: {
+                            position: 'bottom',
+                            labels: {
+                                padding: 15,
+                                font: {
+                                    size: 11
+                                }
+                            }
+                        }
+                    }
+                }
+            });
+        }
+
+        // Chart Dampak
+        function createDampakChart() {
+            const filteredData = getFilteredData('dampakFilter');
+            const dampakData = {};
+            
+            filteredData.forEach(risk => {
+                dampakData[risk.dampak] = (dampakData[risk.dampak] || 0) + 1;
+            });
+
+            // Destroy existing chart jika ada
+            if (dampakChartInstance) dampakChartInstance.destroy();
+
+            const dampakCtx = document.getElementById('dampakChart').getContext('2d');
+            dampakChartInstance = new Chart(dampakCtx, {
+                type: 'pie',
+                data: {
+                    labels: Object.keys(dampakData),
+                    datasets: [{
+                        data: Object.values(dampakData),
+                        backgroundColor: [
+                            '#e74c3c',
+                            '#f39c12',
+                            '#3498db',
+                            '#2ecc71'
+                        ],
+                        borderWidth: 3,
+                        borderColor: '#fff'
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: {
+                            position: 'bottom',
+                            labels: {
+                                padding: 15,
+                                font: {
+                                    size: 11
+                                }
+                            }
+                        }
+                    }
+                }
+            });
+        }
+
+        // Chart Kombinasi
+        function createKombinasiChart() {
+            const filteredData = getFilteredData('kombinasiFilter');
+            const kombinasiData = {};
+            
+            filteredData.forEach(risk => {
+                const kombinasi = getKombinasiLabel(risk.kemungkinan, risk.dampak);
+                kombinasiData[kombinasi] = (kombinasiData[kombinasi] || 0) + 1;
+            });
+
+            // Destroy existing chart jika ada
+            if (kombinasiChartInstance) kombinasiChartInstance.destroy();
+
+            const kombinasiCtx = document.getElementById('kombinasiChart').getContext('2d');
+            kombinasiChartInstance = new Chart(kombinasiCtx, {
+                type: 'pie',
+                data: {
+                    labels: Object.keys(kombinasiData),
+                    datasets: [{
+                        data: Object.values(kombinasiData),
+                        backgroundColor: [
+                            '#c0392b', // Sering & Signifikan (Merah Tua)
+                            '#e67e22', // Sering & Moderat (Orange Tua)
+                            '#f39c12', // Kadang & Signifikan (Orange)
+                            '#3498db', // Kadang & Moderat (Biru)
+                            '#2ecc71'  // Lain-lain (Hijau)
+                        ],
+                        borderWidth: 3,
+                        borderColor: '#fff'
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: {
+                            position: 'bottom',
+                            labels: {
+                                padding: 15,
+                                font: {
+                                    size: 11
+                                }
+                            }
+                        }
+                    }
+                }
+            });
+        }
+
+        // Fungsi untuk mendapatkan label kombinasi
+        function getKombinasiLabel(kemungkinan, dampak) {
+            if (kemungkinan === "Sering Terjadi" && dampak === "Signifikan") {
+                return "Sering & Signifikan";
+            } else if (kemungkinan === "Sering Terjadi" && dampak === "Moderat") {
+                return "Sering & Moderat";
+            } else if (kemungkinan === "Kadang Terjadi" && dampak === "Signifikan") {
+                return "Kadang & Signifikan";
+            } else if (kemungkinan === "Kadang Terjadi" && dampak === "Moderat") {
+                return "Kadang & Moderat";
+            } else {
+                return "Lain-lain";
+            }
+        }
+
+        // Mengisi tabel risiko dengan sorting dan filter
+        function populateTable() {
+            const tableBody = document.getElementById('riskTableBody');
+            
+            // Get filtered data
+            const filteredData = getFilteredTableData();
+            
+            // Sort berdasarkan kemungkinan dan dampak
+            const sortedData = [...filteredData].sort((a, b) => {
+                const kemungkinanOrder = { "Sering Terjadi": 2, "Kadang Terjadi": 1 };
+                const dampakOrder = { "Signifikan": 2, "Moderat": 1 };
+                
+                const scoreA = (kemungkinanOrder[a.kemungkinan] || 0) + (dampakOrder[a.dampak] || 0);
+                const scoreB = (kemungkinanOrder[b.kemungkinan] || 0) + (dampakOrder[b.dampak] || 0);
+                
+                return scoreB - scoreA;
+            });
+
+            tableBody.innerHTML = '';
+            
+            if (sortedData.length === 0) {
+                const row = document.createElement('tr');
+                row.innerHTML = `
+                    <td colspan="6" style="text-align: center; padding: 30px; color: #7f8c8d; font-style: italic;">
+                        Tidak ada data yang sesuai dengan filter yang dipilih
+                    </td>
+                `;
+                tableBody.appendChild(row);
+                return;
+            }
+
+            sortedData.forEach((risk, index) => {
+                const row = document.createElement('tr');
+                const riskScore = getRiskScore(risk.kemungkinan, risk.dampak);
+                
+                row.innerHTML = `
+                    <td>${index + 1}</td>
+                    <td>${risk.tahap}</td>
+                    <td>${risk.risiko}</td>
+                    <td><span class="risk-level ${risk.kemungkinan.toLowerCase().replace(' ', '-')}">${risk.kemungkinan}</span></td>
+                    <td><span class="impact-level ${risk.dampak.toLowerCase()}">${risk.dampak}</span></td>
+                    <td><span class="risk-level ${riskScore.class}">${riskScore.level}</span></td>
+                `;
+                tableBody.appendChild(row);
+            });
+        }
+
+        function getRiskScore(kemungkinan, dampak) {
+            if (kemungkinan === "Sering Terjadi" && dampak === "Signifikan") {
+                return { level: "Tinggi", class: "sering" };
+            } else if (kemungkinan === "Kadang Terjadi" && dampak === "Moderat") {
+                return { level: "Sedang", class: "kadang" };
+            } else {
+                return { level: "Rendah", class: "kadang" };
+            }
+        }
+
+        // Mengisi dropdown tahap
+        function populateTahapSelect() {
+            const tahapSelect = document.getElementById('tahapSelect');
+            const uniqueTahap = [...new Set(riskData.map(risk => risk.tahap))];
+            
+            tahapSelect.innerHTML = '<option value="">-- Pilih Tahapan --</option>';
+            uniqueTahap.forEach(tahap => {
+                const option = document.createElement('option');
+                option.value = tahap;
+                option.textContent = tahap;
+                tahapSelect.appendChild(option);
+            });
+        }
+
+        // Update dropdown risiko berdasarkan tahap yang dipilih
+        function updateRisiko() {
+            const tahapSelect = document.getElementById('tahapSelect');
+            const risikoSelect = document.getElementById('risikoSelect');
+            const selectedTahap = tahapSelect.value;
+            
+            risikoSelect.innerHTML = '<option value="">-- Pilih Risiko --</option>';
+            
+            if (selectedTahap) {
+                const filteredRisks = riskData.filter(risk => risk.tahap === selectedTahap);
+                filteredRisks.forEach((risk, index) => {
+                    const option = document.createElement('option');
+                    option.value = index;
+                    option.dataset.tahap = selectedTahap;
+                    option.textContent = risk.risiko;
+                    risikoSelect.appendChild(option);
+                });
+            }
+            
+            // Sembunyikan hasil mitigasi
+            document.getElementById('mitigasiResult').style.display = 'none';
+        }
+
+        // Menampilkan strategi mitigasi
+        function showMitigasi() {
+            const tahapSelect = document.getElementById('tahapSelect');
+            const risikoSelect = document.getElementById('risikoSelect');
+            const mitigasiResult = document.getElementById('mitigasiResult');
+            const mitigasiList = document.getElementById('mitigasiList');
+            
+            const selectedTahap = tahapSelect.value;
+            const selectedRisikoIndex = risikoSelect.value;
+            
+            if (selectedTahap && selectedRisikoIndex !== '') {
+                const filteredRisks = riskData.filter(risk => risk.tahap === selectedTahap);
+                const selectedRisk = filteredRisks[parseInt(selectedRisikoIndex)];
+                
+                mitigasiList.innerHTML = '';
+                selectedRisk.mitigasi.forEach(mitigation => {
+                    const li = document.createElement('li');
+                    li.textContent = mitigation;
+                    mitigasiList.appendChild(li);
+                });
+                
+                mitigasiResult.style.display = 'block';
+            } else {
+                mitigasiResult.style.display = 'none';
+            }
+        }
+
+        // Inisialisasi dashboard saat halaman dimuat
+        window.onload = initDashboard;
+    </script>
+</body>
+</html>
