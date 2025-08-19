@@ -92,8 +92,8 @@
         }
 
         .charts-container {
-            display: grid;
-            grid-template-columns: 1fr 1fr 1fr;
+            display: flex;
+            flex-direction: column;
             gap: 30px;
             margin-bottom: 30px;
         }
@@ -127,6 +127,9 @@
             border-radius: 15px;
             box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
             transition: transform 0.3s ease;
+            max-width: 600px;
+            margin: 0 auto;
+            width: 100%;
         }
 
         .chart-card:hover {
@@ -142,7 +145,7 @@
 
         .chart-container {
             position: relative;
-            height: 300px;
+            height: 350px;
         }
 
         .table-container {
@@ -287,10 +290,6 @@
                 padding: 15px 10px;
             }
 
-            .charts-container {
-                grid-template-columns: 1fr;
-            }
-
             .filter-container {
                 grid-template-columns: 1fr !important;
                 gap: 15px !important;
@@ -319,6 +318,11 @@
 
             .chart-card {
                 padding: 20px 15px;
+                max-width: 100%;
+            }
+
+            .chart-container {
+                height: 300px;
             }
 
             .table-container {
@@ -351,10 +355,6 @@
         }
 
         @media (max-width: 1024px) and (min-width: 769px) {
-            .charts-container {
-                grid-template-columns: 1fr 1fr;
-            }
-
             .filter-container {
                 grid-template-columns: 1fr 1fr 1fr !important;
                 gap: 15px !important;
@@ -372,6 +372,10 @@
                 padding: 25px 20px;
             }
 
+            .chart-card {
+                max-width: 500px;
+            }
+
             .table-container {
                 overflow-x: auto;
             }
@@ -382,12 +386,12 @@
         }
 
         @media (max-width: 1200px) {
-            .charts-container {
-                grid-template-columns: 1fr 1fr;
-            }
-
             .filter-container {
                 grid-template-columns: 1fr 1fr !important;
+            }
+
+            .chart-card {
+                max-width: 550px;
             }
         }
 
@@ -424,6 +428,11 @@
 
             .chart-card, .selector-card, .result-card {
                 padding: 15px 10px;
+                max-width: 100%;
+            }
+
+            .chart-container {
+                height: 280px;
             }
 
             .filter-select {
@@ -721,9 +730,18 @@
                         legend: {
                             position: 'bottom',
                             labels: {
-                                padding: 15,
+                                padding: 20,
                                 font: {
-                                    size: 11
+                                    size: 12
+                                }
+                            }
+                        },
+                        tooltip: {
+                            callbacks: {
+                                label: function(context) {
+                                    const total = context.dataset.data.reduce((a, b) => a + b, 0);
+                                    const percentage = ((context.parsed * 100) / total).toFixed(1);
+                                    return `${context.label}: ${context.parsed} (${percentage}%)`;
                                 }
                             }
                         }
@@ -768,9 +786,18 @@
                         legend: {
                             position: 'bottom',
                             labels: {
-                                padding: 15,
+                                padding: 20,
                                 font: {
-                                    size: 11
+                                    size: 12
+                                }
+                            }
+                        },
+                        tooltip: {
+                            callbacks: {
+                                label: function(context) {
+                                    const total = context.dataset.data.reduce((a, b) => a + b, 0);
+                                    const percentage = ((context.parsed * 100) / total).toFixed(1);
+                                    return `${context.label}: ${context.parsed} (${percentage}%)`;
                                 }
                             }
                         }
@@ -817,9 +844,18 @@
                         legend: {
                             position: 'bottom',
                             labels: {
-                                padding: 15,
+                                padding: 20,
                                 font: {
-                                    size: 11
+                                    size: 12
+                                }
+                            }
+                        },
+                        tooltip: {
+                            callbacks: {
+                                label: function(context) {
+                                    const total = context.dataset.data.reduce((a, b) => a + b, 0);
+                                    const percentage = ((context.parsed * 100) / total).toFixed(1);
+                                    return `${context.label}: ${context.parsed} (${percentage}%)`;
                                 }
                             }
                         }
