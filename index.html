@@ -175,31 +175,43 @@
             overflow-x: auto;
         }
 
-        .risk-table {
-            width: 100%;
-            border-collapse: collapse;
-            min-width: 1000px;
-        }
+        .risk-table, .mitigation-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 20px;
+    min-width: 1000px; /* biar tidak sempit di layar kecil */
+}
 
-        .risk-table th {
-            background: linear-gradient(135deg, #3498db, #2980b9);
-            color: white;
-            padding: 15px;
-            text-align: left;
-            font-weight: 600;
-            white-space: nowrap;
-        }
+.risk-table th, .mitigation-table th {
+    background: linear-gradient(135deg, #3498db, #2980b9);
+    color: white;
+    padding: 15px;
+    text-align: left;
+    font-weight: 600;
+    white-space: wrap;
+}
 
-        .risk-table td {
-            padding: 15px;
-            border-bottom: 1px solid #e9ecef;
-            transition: background 0.3s ease;
-            vertical-align: top;
-        }
+.risk-table td, .mitigation-table td {
+    padding: 15px;
+    border-bottom: 1px solid #e9ecef;
+    vertical-align: top;
+    transition: background 0.3s ease;
+}
 
-        .risk-table tr:hover {
-            background: #f8f9fa;
-        }
+.risk-table tr:hover, .mitigation-table tr:hover {
+    background: #d4e8f3;
+}
+
+/* Lebarkan kolom strategi */
+.risk-table th:nth-child(8),
+.risk-table td:nth-child(8),
+.mitigation-table th:nth-child(8),
+.mitigation-table td:nth-child(8) {
+    min-width: 500px;   /* lebih lebar */
+    max-width: 600px;   /* batas maksimal */
+    white-space: normal; /* teks boleh turun ke bawah */
+    word-wrap: break-word;
+}
 
         .risk-level {
             padding: 5px 12px;
@@ -250,34 +262,6 @@
         select:focus {
             outline: none;
             border-color: #3498db;
-        }
-
-        .mitigation-table {
-            width: 100%;
-            border-collapse: collapse;
-            margin-top: 20px;
-        }
-
-        .mitigation-table th {
-            background: linear-gradient(135deg, #3498db, #2980b9);
-            color: white;
-            padding: 12px;
-            text-align: left;
-            font-weight: 600;
-        }
-
-        .mitigation-table td {
-            padding: 12px;
-            border-bottom: 1px solid #e9ecef;
-            vertical-align: top;
-        }
-
-        .mitigation-table tr:nth-child(even) {
-            background: #f8f9fa;
-        }
-
-        .mitigation-table tr:hover {
-            background: #e8f5e8;
         }
 
         .filter-container {
@@ -349,6 +333,44 @@
                 grid-template-columns: 1fr 1fr;
             }
         }
+
+        .strategi-list {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    padding: 0;
+    margin: 0;
+    list-style: none;
+}
+.strategi-list li {
+    background: #f8f9fa;
+    border-radius: 10px;
+    border-left: 4px solid #3498db;
+    padding: 14px 18px;
+    margin: 0;
+    box-shadow: 0 2px 8px rgba(52,152,219,0.07);
+    font-size: 0.97rem;
+    line-height: 1.5;
+    word-break: break-word;
+}
+
+.risk-table th:nth-child(5),
+.risk-table td:nth-child(5) {
+    width: 250px !important;
+    min-width: 250px !important;
+    max-width: 350px;
+    white-space: normal;
+    word-break: break-word;
+}
+
+.risk-table th:nth-child(6),
+.risk-table td:nth-child(6) {
+    width: 100px !important;
+    min-width: 100px !important;
+    max-width: 140px;
+    white-space: normal;
+    word-break: break-word;
+}
     </style>
 </head>
 <body>
@@ -359,19 +381,119 @@
         </div>
 
         <div class="nav-tabs">
-            <button class="nav-tab active" onclick="showTab('charts')">
-                Grafik Risiko
-            </button>
-            <button class="nav-tab" onclick="showTab('table')">
+            <button class="nav-tab active" onclick="showTab('table')">
                 Tabel Risiko
             </button>
             <button class="nav-tab" onclick="showTab('mitigasi')">
                 Mitigasi Risiko
             </button>
+            <button class="nav-tab" onclick="showTab('charts')">
+                Grafik Risiko
+            </button>
         </div>
 
-        <!-- Tab 1: Grafik -->
-        <div id="charts" class="tab-content active">
+        <!-- Tab 1: Tabel Risiko -->
+        <div id="table" class="tab-content active">
+            <div class="filter-container">
+    <div>
+        <label>Filter Tahap:</label>
+        <select id="tableFilterTahap" class="filter-select" onchange="updateKegiatanFilter()">
+            <option value="">Semua Tahapan</option>
+            <!-- Opsi tahapan akan diisi dinamis -->
+        </select>
+    </div>
+    <div>
+        <label>Filter Kegiatan:</label>
+        <select id="tableFilterKegiatan" class="filter-select" onchange="updateTable()">
+            <option value="">Semua Kegiatan</option>
+            <!-- Opsi kegiatan akan diisi dinamis -->
+        </select>
+    </div>
+    <div>
+        <label>Filter Kemungkinan:</label>
+        <select id="tableFilterKemungkinan" class="filter-select" onchange="updateTable()">
+            <option value="">Semua Kemungkinan</option>
+            <option value="Sering Terjadi">Sering Terjadi</option>
+            <option value="Kadang Terjadi">Kadang Terjadi</option>
+            <option value="Sangat Sering Terjadi">Sangat Sering Terjadi</option>
+        </select>
+    </div>
+    <div>
+        <label>Filter Dampak:</label>
+        <select id="tableFilterDampak" class="filter-select" onchange="updateTable()">
+            <option value="">Semua Dampak</option>
+            <option value="Signifikan">Signifikan</option>
+            <option value="Sangat Signifikan">Sangat Signifikan</option>
+            <option value="Moderat">Moderat</option>
+        </select>
+    </div>
+</div>
+            <div class="table-container">
+                <table class="risk-table">
+                    <thead>
+                        <tr>
+                            <th style="width: 40px;">No</th>
+                            <th style="width: 80px;">Tahap</th>
+                            <th style="width: 100px;">Kegiatan</th>
+                            <th style="width: 100px;">Sub Kegiatan</th>
+                            <th style="width: 200px;">Risiko</th>
+                            <th style="width: 140px;">Kemungkinan</th>
+                            <th style="width: 100px;">Dampak</th>
+                            <th style="width: 350px;">Strategi</th>
+                            <th style="width: 120px;">PIC</th>
+                            <th style="width: 100px;">Lokasi</th>
+                        </tr>
+                    </thead>
+                    <tbody id="riskTableBody">
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- Tab 2: Mitigasi Risiko -->
+        <div id="mitigasi" class="tab-content">
+            <div class="selector-container">
+                <div class="selector-card">
+                    <h3>Pilih Tahapan</h3>
+                    <select id="tahapSelect" onchange="updateKegiatan()">
+                        <option value="">-- Pilih Tahapan --</option>
+                        <option value="Persiapan SE2026">Persiapan SE2026</option>
+                    </select>
+                </div>
+                <div class="selector-card">
+                    <h3>Pilih Kegiatan</h3>
+                    <select id="kegiatanSelect" onchange="updateRisiko()">
+                        <option value="">-- Pilih Kegiatan --</option>
+                    </select>
+                </div>
+                <div class="selector-card">
+                    <h3>Pilih Risiko</h3>
+                    <select id="risikoSelect" onchange="showMitigasiDetail()">
+                        <option value="">-- Pilih Risiko --</option>
+                    </select>
+                </div>
+            </div>
+            <div id="mitigasiResult" style="display: none;">
+                <div class="table-container">
+                    <table class="mitigation-table">
+                        <thead>
+                            <tr>
+                                <th style="width: 40px;">No</th>
+                                <th style="width: 150px;">PIC</th>
+                                <th style="width: 150px;">Intervensi Pemda/Stakeholder</th>
+                                <th style="width: 150px;">Lokasi</th>
+                                <th style="width: 350px;">Strategi Mitigasi</th>
+                            </tr>
+                        </thead>
+                        <tbody id="mitigasiTableBody">
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <!-- Tab 3: Grafik Risiko -->
+        <div id="charts" class="tab-content">
             <div class="charts-container">
                 <div class="chart-card">
                     <h3>Distribusi Tingkat Kemungkinan</h3>
@@ -417,104 +539,6 @@
                     <div class="chart-container">
                         <canvas id="kombinasiChart"></canvas>
                     </div>
-                </div>
-            </div>
-        </div>
-
-        <!-- Tab 2: Tabel -->
-        <div id="table" class="tab-content">
-            <div class="filter-container">
-                <div>
-                    <label>Filter Tahap:</label>
-                    <select id="tableFilterTahap" class="filter-select" onchange="updateTable()">
-                        <option value="">Semua Tahapan</option>
-                        <option value="Persiapan SE2026">Persiapan SE2026</option>
-                    </select>
-                </div>
-                <div>
-                    <label>Filter Kegiatan:</label>
-                    <select id="tableFilterKegiatan" class="filter-select" onchange="updateTable()">
-                        <option value="">Semua Kegiatan</option>
-                        <option value="Publisitas SE2026">Publisitas SE2026</option>
-                        <option value="Rekrutmen Petugas SE2026">Rekrutmen Petugas SE2026</option>
-                    </select>
-                </div>
-                <div>
-                    <label>Filter Kemungkinan:</label>
-                    <select id="tableFilterKemungkinan" class="filter-select" onchange="updateTable()">
-                        <option value="">Semua Kemungkinan</option>
-                        <option value="Sering Terjadi">Sering Terjadi</option>
-                        <option value="Kadang Terjadi">Kadang Terjadi</option>
-                    </select>
-                </div>
-                <div>
-                    <label>Filter Dampak:</label>
-                    <select id="tableFilterDampak" class="filter-select" onchange="updateTable()">
-                        <option value="">Semua Dampak</option>
-                        <option value="Signifikan">Signifikan</option>
-                    </select>
-                </div>
-            </div>
-            <div class="table-container">
-                <table class="risk-table">
-                    <thead>
-                        <tr>
-                            <th style="width: 40px;">No</th>
-                            <th style="width: 120px;">Tahap</th>
-                            <th style="width: 150px;">Kegiatan</th>
-                            <th style="width: 120px;">Sub Kegiatan</th>
-                            <th style="width: 250px;">Risiko</th>
-                            <th style="width: 120px;">Kemungkinan</th>
-                            <th style="width: 100px;">Dampak</th>
-                            <th style="width: 200px;">Strategi</th>
-                            <th style="width: 150px;">PIC</th>
-                            <th style="width: 150px;">Lokasi</th>
-                        </tr>
-                    </thead>
-                    <tbody id="riskTableBody">
-                    </tbody>
-                </table>
-            </div>
-        </div>
-
-        <!-- Tab 3: Mitigasi -->
-        <div id="mitigasi" class="tab-content">
-            <div class="selector-container">
-                <div class="selector-card">
-                    <h3>Pilih Tahapan</h3>
-                    <select id="tahapSelect" onchange="updateKegiatan()">
-                        <option value="">-- Pilih Tahapan --</option>
-                        <option value="Persiapan SE2026">Persiapan SE2026</option>
-                    </select>
-                </div>
-                <div class="selector-card">
-                    <h3>Pilih Kegiatan</h3>
-                    <select id="kegiatanSelect" onchange="updateRisiko()">
-                        <option value="">-- Pilih Kegiatan --</option>
-                    </select>
-                </div>
-                <div class="selector-card">
-                    <h3>Pilih Risiko</h3>
-                    <select id="risikoSelect" onchange="showMitigasiDetail()">
-                        <option value="">-- Pilih Risiko --</option>
-                    </select>
-                </div>
-            </div>
-            <div id="mitigasiResult" style="display: none;">
-                <div class="table-container">
-                    <table class="mitigation-table">
-                        <thead>
-                            <tr>
-                                <th style="width: 40px;">No</th>
-                                <th style="width: 150px;">PIC</th>
-                                <th style="width: 200px;">Intervensi Pemda/Stakeholder</th>
-                                <th style="width: 150px;">Lokasi</th>
-                                <th style="width: 300px;">Strategi Mitigasi</th>
-                            </tr>
-                        </thead>
-                        <tbody id="mitigasiTableBody">
-                        </tbody>
-                    </table>
                 </div>
             </div>
         </div>
@@ -853,6 +877,7 @@ const riskData = [
         // Inisialisasi dashboard
         function initDashboard() {
             createCharts();
+            populateTableFilters();
             populateTable();
             populateTahapSelect();
         }
@@ -1139,20 +1164,32 @@ function getKombinasiLabel(kemungkinan, dampak) {
             }
 
             filteredData.forEach((risk, index) => {
-                const row = document.createElement('tr');
-                row.innerHTML = `
-                    <td>${index + 1}</td>
-                    <td>${risk.tahap}</td>
-                    <td>${risk.kegiatan}</td>
-                    <td>${risk.subKegiatan}</td>
-                    <td>${risk.risiko}</td>
-                    <td><span class="risk-level ${risk.kemungkinan.toLowerCase().replace(' ', '-')}">${risk.kemungkinan}</span></td>
-                    <td>${risk.dampak}</td>
-                    <td>${risk.strategi}</td>
-                    <td>${risk.pic}</td>
-                    <td>${risk.lokasi}</td>
-                `;
-                tableBody.appendChild(row);
+                // Pisahkan strategi berdasarkan nomor (1. 2. dst)
+    let strategies = [];
+    if (Array.isArray(risk.strategi)) {
+        strategies = risk.strategi;
+    } else if (typeof risk.strategi === 'string') {
+        strategies = risk.strategi.split(/\d+\.\s?/).filter(s => s.trim());
+    }
+    // Gunakan ul dengan class strategi-list agar tampil seperti card
+    const strategiList = strategies.length
+        ? `<ul class="strategi-list">${strategies.map(s => `<li>${s.trim()}</li>`).join('')}</ul>`
+        : '';
+
+    const row = document.createElement('tr');
+    row.innerHTML = `
+        <td>${index + 1}</td>
+        <td>${risk.tahap || ''}</td>
+        <td>${risk.kegiatan || ''}</td>
+        <td>${risk.subKegiatan || ''}</td>
+        <td>${risk.risiko || ''}</td>
+        <td><span class="risk-level ${risk.kemungkinan ? risk.kemungkinan.toLowerCase().replace(' ', '-') : ''}">${risk.kemungkinan || ''}</span></td>
+        <td>${risk.dampak || ''}</td>
+        <td>${strategiList}</td>
+        <td>${risk.pic || ''}</td>
+        <td>${risk.lokasi || ''}</td>
+    `;
+    tableBody.appendChild(row);
             });
         }
 
@@ -1264,8 +1301,65 @@ function getKombinasiLabel(kemungkinan, dampak) {
             }
         }
 
-        // Inisialisasi dashboard saat halaman dimuat
-        window.onload = initDashboard;
+        // Isi filter tahapan dan kegiatan secara dinamis
+function populateTableFilters() {
+    const tahapSelect = document.getElementById('tableFilterTahap');
+    const kegiatanSelect = document.getElementById('tableFilterKegiatan');
+
+    // Tahapan unik
+    const uniqueTahap = [...new Set(riskData.map(risk => risk.tahap))];
+    tahapSelect.innerHTML = '<option value="">Semua Tahapan</option>';
+    uniqueTahap.forEach(tahap => {
+        const option = document.createElement('option');
+        option.value = tahap;
+        option.textContent = tahap;
+        tahapSelect.appendChild(option);
+    });
+
+    // Kegiatan unik (default: semua kegiatan)
+    const uniqueKegiatan = [...new Set(riskData.map(risk => risk.kegiatan))];
+    kegiatanSelect.innerHTML = '<option value="">Semua Kegiatan</option>';
+    uniqueKegiatan.forEach(kegiatan => {
+        const option = document.createElement('option');
+        option.value = kegiatan;
+        option.textContent = kegiatan;
+        kegiatanSelect.appendChild(option);
+    });
+}
+
+// Update filter kegiatan saat tahapan dipilih
+function updateKegiatanFilter() {
+    const tahapSelect = document.getElementById('tableFilterTahap');
+    const kegiatanSelect = document.getElementById('tableFilterKegiatan');
+    const selectedTahap = tahapSelect.value;
+
+    let filteredKegiatan;
+    if (selectedTahap) {
+        filteredKegiatan = [...new Set(riskData.filter(risk => risk.tahap === selectedTahap).map(risk => risk.kegiatan))];
+    } else {
+        filteredKegiatan = [...new Set(riskData.map(risk => risk.kegiatan))];
+    }
+
+    kegiatanSelect.innerHTML = '<option value="">Semua Kegiatan</option>';
+    filteredKegiatan.forEach(kegiatan => {
+        const option = document.createElement('option');
+        option.value = kegiatan;
+        option.textContent = kegiatan;
+        kegiatanSelect.appendChild(option);
+    });
+
+    updateTable();
+}
+
+// Panggil fungsi ini saat halaman dimuat
+function initDashboard() {
+    createCharts();
+    populateTableFilters();
+    populateTable();
+    populateTahapSelect();
+}
+// Inisialisasi dashboard saat halaman dimuat
+window.onload = initDashboard;
     </script>
 </body>
 </html>
