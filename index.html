@@ -3,8 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>SIMRIS BPS Sleman</title>
-    <link rel="icon" type="image/png" href="logo.png">
+    <title>SIMRIS BPS SLEMAN - Enhanced</title>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.9.1/chart.min.js"></script>
     <style>
         * {
@@ -154,11 +153,13 @@
             border-radius: 15px;
             overflow: hidden;
             box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+            overflow-x: auto;
         }
 
         .risk-table {
             width: 100%;
             border-collapse: collapse;
+            min-width: 1000px;
         }
 
         .risk-table th {
@@ -167,6 +168,7 @@
             padding: 15px;
             text-align: left;
             font-weight: 600;
+            white-space: nowrap;
         }
 
         .risk-table td {
@@ -185,6 +187,7 @@
             border-radius: 20px;
             font-weight: 600;
             font-size: 0.9rem;
+            white-space: nowrap;
         }
 
         .risk-level.sering {
@@ -197,30 +200,10 @@
             color: white;
         }
 
-        .mitigation-list-cell {
-            list-style: none;
-            padding: 0;
-            margin: 0;
-        }
-
-        .mitigation-list-cell li {
-            background: #f8f9fa;
-            margin-bottom: 8px;
-            padding: 8px 12px;
-            border-radius: 6px;
-            border-left: 3px solid #3498db;
-            font-size: 0.9rem;
-            line-height: 1.4;
-        }
-
-        .mitigation-list-cell li:last-child {
-            margin-bottom: 0;
-        }
-
         .selector-container {
             display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 30px;
+            grid-template-columns: 1fr 1fr 1fr;
+            gap: 20px;
             margin-bottom: 30px;
         }
 
@@ -250,50 +233,68 @@
             border-color: #3498db;
         }
 
-        .result-card {
-            background: white;
-            padding: 25px;
-            border-radius: 15px;
-            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+        .mitigation-table {
+            width: 100%;
+            border-collapse: collapse;
             margin-top: 20px;
         }
 
-        .result-card h3 {
-            color: #2c3e50;
-            margin-bottom: 15px;
+        .mitigation-table th {
+            background: linear-gradient(135deg, #3498db, #2980b9);
+            color: white;
+            padding: 12px;
+            text-align: left;
+            font-weight: 600;
         }
 
-        .mitigation-list {
-            list-style: none;
+        .mitigation-table td {
+            padding: 12px;
+            border-bottom: 1px solid #e9ecef;
+            vertical-align: top;
         }
 
-        .mitigation-list li {
+        .mitigation-table tr:nth-child(even) {
             background: #f8f9fa;
-            margin-bottom: 10px;
-            padding: 15px;
-            border-radius: 8px;
-            border-left: 4px solid #3498db;
-            transition: transform 0.2s ease;
         }
 
-        .mitigation-list li:hover {
-            transform: translateX(5px);
+        .mitigation-table tr:hover {
+            background: #e8f5e8;
+        }
+
+        .filter-container {
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr 1fr;
+            gap: 20px;
+            background: white;
+            padding: 20px;
+            border-radius: 15px;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+            margin-bottom: 30px;
+        }
+
+        .filter-container label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: #2c3e50;
+        }
+
+        .filter-container .filter-select {
+            width: 100%;
+            max-width: none;
         }
 
         @media (max-width: 768px) {
             .charts-container,
-            .selector-container {
+            .selector-container,
+            .filter-container {
                 grid-template-columns: 1fr;
+                gap: 15px;
             }
             
             .nav-tab {
                 font-size: 0.9rem;
                 padding: 15px 10px;
-            }
-
-            .filter-container {
-                grid-template-columns: 1fr !important;
-                gap: 15px !important;
             }
 
             .container {
@@ -309,15 +310,11 @@
                 font-size: 1.8rem;
             }
 
-            .header p {
-                font-size: 1rem;
-            }
-
             .tab-content {
                 padding: 20px 15px;
             }
 
-            .chart-card {
+            .chart-card, .selector-card {
                 padding: 20px 15px;
                 max-width: 100%;
             }
@@ -325,129 +322,12 @@
             .chart-container {
                 height: 300px;
             }
-
-            .table-container {
-                overflow-x: auto;
-                -webkit-overflow-scrolling: touch;
-            }
-
-            .risk-table {
-                min-width: 800px;
-                font-size: 0.85rem;
-            }
-
-            .risk-table th,
-            .risk-table td {
-                padding: 10px 8px;
-            }
-
-            .mitigation-list-cell li {
-                font-size: 0.8rem;
-                padding: 6px 10px;
-            }
-
-            .selector-card {
-                padding: 20px 15px;
-            }
-
-            .result-card {
-                padding: 20px 15px;
-            }
         }
 
         @media (max-width: 1024px) and (min-width: 769px) {
+            .selector-container,
             .filter-container {
-                grid-template-columns: 1fr 1fr 1fr !important;
-                gap: 15px !important;
-            }
-
-            .container {
-                margin: 15px;
-            }
-
-            .header h1 {
-                font-size: 2.2rem;
-            }
-
-            .tab-content {
-                padding: 25px 20px;
-            }
-
-            .chart-card {
-                max-width: 500px;
-            }
-
-            .table-container {
-                overflow-x: auto;
-            }
-
-            .risk-table {
-                font-size: 0.9rem;
-            }
-        }
-
-        @media (max-width: 1200px) {
-            .filter-container {
-                grid-template-columns: 1fr 1fr !important;
-            }
-
-            .chart-card {
-                max-width: 550px;
-            }
-        }
-
-        @media (max-width: 480px) {
-            body {
-                padding: 5px;
-            }
-
-            .container {
-                margin: 5px;
-                border-radius: 10px;
-            }
-
-            .header {
-                padding: 15px 10px;
-            }
-
-            .header h1 {
-                font-size: 1.5rem;
-            }
-
-            .header p {
-                font-size: 0.9rem;
-            }
-
-            .nav-tab {
-                font-size: 0.8rem;
-                padding: 12px 8px;
-            }
-
-            .tab-content {
-                padding: 15px 10px;
-            }
-
-            .chart-card, .selector-card, .result-card {
-                padding: 15px 10px;
-                max-width: 100%;
-            }
-
-            .chart-container {
-                height: 280px;
-            }
-
-            .filter-select {
-                font-size: 0.85rem;
-                padding: 8px 12px;
-            }
-
-            .risk-table {
-                font-size: 0.8rem;
-            }
-
-            .risk-table th,
-            .risk-table td {
-                padding: 8px 6px;
+                grid-template-columns: 1fr 1fr;
             }
         }
     </style>
@@ -455,19 +335,19 @@
 <body>
     <div class="container">
         <div class="header">
-            <h1>Dashboard Manajemen Risiko</h1>
-            <p>Sistem Monitoring dan Analisis Risiko Organisasi</p>
+            <h1>Dashboard Manajemen Risiko SE2026</h1>
+            <p>Sistem Monitoring dan Analisis Risiko - BPS Sleman</p>
         </div>
 
         <div class="nav-tabs">
             <button class="nav-tab active" onclick="showTab('charts')">
-                📊 Grafik Risiko
+                Grafik Risiko
             </button>
             <button class="nav-tab" onclick="showTab('table')">
-                📋 Tabel Risiko
+                Tabel Risiko
             </button>
             <button class="nav-tab" onclick="showTab('mitigasi')">
-                🛡️ Mitigasi Risiko
+                Mitigasi Risiko
             </button>
         </div>
 
@@ -479,9 +359,10 @@
                     <div class="chart-filter">
                         <select id="kemungkinanFilter" class="filter-select" onchange="updateKemungkinanChart()">
                             <option value="">Semua Tahapan</option>
-                            <option value="Persiapan">Persiapan</option>
-                            <option value="Pelaksanaan">Pelaksanaan</option>
-                            <option value="Diseminasi">Diseminasi</option>
+                            <option value="Persiapan SE2026">Persiapan</option>
+                            <option value="Pelaksanaan SE2026">Pelaksanaan</option>
+                            <option value="Pengolahan SE2026">Pengolahan</option>
+                            <option value="Diseminasi SE2026">Diseminasi</option>
                         </select>
                     </div>
                     <div class="chart-container">
@@ -493,8 +374,10 @@
                     <div class="chart-filter">
                         <select id="dampakFilter" class="filter-select" onchange="updateDampakChart()">
                             <option value="">Semua Tahapan</option>
-                            <option value="Persiapan">Persiapan</option>
-                            <option value="Pelaksanaan">Pelaksanaan</option>
+                            <option value="Persiapan SE2026">Persiapan</option>
+                            <option value="Pelaksanaan SE2026">Pelaksanaan</option>
+                            <option value="Pengolahan SE2026">Pengolahan</option>
+                            <option value="Diseminasi SE2026">Diseminasi</option>
                         </select>
                     </div>
                     <div class="chart-container">
@@ -506,8 +389,10 @@
                     <div class="chart-filter">
                         <select id="kombinasiFilter" class="filter-select" onchange="updateKombinasiChart()">
                             <option value="">Semua Tahapan</option>
-                            <option value="Persiapan">Persiapan</option>
-                            <option value="Pelaksanaan">Pelaksanaan</option>
+                            <option value="Persiapan SE2026">Persiapan</option>
+                            <option value="Pelaksanaan SE2026">Pelaksanaan</option>
+                            <option value="Pengolahan SE2026">Pengolahan</option>
+                            <option value="Diseminasi SE2026">Diseminasi</option>
                         </select>
                     </div>
                     <div class="chart-container">
@@ -519,29 +404,35 @@
 
         <!-- Tab 2: Tabel -->
         <div id="table" class="tab-content">
-            <div class="filter-container" style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 20px; background: white; padding: 20px; border-radius: 15px; box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1); margin-bottom: 30px;">
+            <div class="filter-container">
                 <div>
-                    <label style="display: block; margin-bottom: 8px; font-weight: 600; color: #2c3e50;">Filter Tahap:</label>
-                    <select id="tableFilterTahap" class="filter-select" onchange="updateTable()" style="width: 100%; max-width: none;">
+                    <label>Filter Tahap:</label>
+                    <select id="tableFilterTahap" class="filter-select" onchange="updateTable()">
                         <option value="">Semua Tahapan</option>
-                        <option value="Persiapan">Persiapan</option>
-                        <option value="Pelaksanaan">Pelaksanaan</option>
+                        <option value="Persiapan SE2026">Persiapan SE2026</option>
                     </select>
                 </div>
                 <div>
-                    <label style="display: block; margin-bottom: 8px; font-weight: 600; color: #2c3e50;">Filter Kemungkinan:</label>
-                    <select id="tableFilterKemungkinan" class="filter-select" onchange="updateTable()" style="width: 100%; max-width: none;">
+                    <label>Filter Kegiatan:</label>
+                    <select id="tableFilterKegiatan" class="filter-select" onchange="updateTable()">
+                        <option value="">Semua Kegiatan</option>
+                        <option value="Publisitas SE2026">Publisitas SE2026</option>
+                        <option value="Rekrutmen Petugas SE2026">Rekrutmen Petugas SE2026</option>
+                    </select>
+                </div>
+                <div>
+                    <label>Filter Kemungkinan:</label>
+                    <select id="tableFilterKemungkinan" class="filter-select" onchange="updateTable()">
                         <option value="">Semua Kemungkinan</option>
                         <option value="Sering Terjadi">Sering Terjadi</option>
                         <option value="Kadang Terjadi">Kadang Terjadi</option>
                     </select>
                 </div>
                 <div>
-                    <label style="display: block; margin-bottom: 8px; font-weight: 600; color: #2c3e50;">Filter Dampak:</label>
-                    <select id="tableFilterDampak" class="filter-select" onchange="updateTable()" style="width: 100%; max-width: none;">
+                    <label>Filter Dampak:</label>
+                    <select id="tableFilterDampak" class="filter-select" onchange="updateTable()">
                         <option value="">Semua Dampak</option>
                         <option value="Signifikan">Signifikan</option>
-                        <option value="Moderat">Moderat</option>
                     </select>
                 </div>
             </div>
@@ -549,12 +440,16 @@
                 <table class="risk-table">
                     <thead>
                         <tr>
-                            <th style="width: 50px;">No</th>
-                            <th style="width: 100px;">Tahap</th>
-                            <th style="width: 300px;">Risiko</th>
-                            <th style="width: 130px;">Kemungkinan</th>
+                            <th style="width: 40px;">No</th>
+                            <th style="width: 120px;">Tahap</th>
+                            <th style="width: 150px;">Kegiatan</th>
+                            <th style="width: 120px;">Sub Kegiatan</th>
+                            <th style="width: 250px;">Risiko</th>
+                            <th style="width: 120px;">Kemungkinan</th>
                             <th style="width: 100px;">Dampak</th>
-                            <th>Mitigasi</th>
+                            <th style="width: 200px;">Strategi</th>
+                            <th style="width: 150px;">PIC</th>
+                            <th style="width: 150px;">Lokasi</th>
                         </tr>
                     </thead>
                     <tbody id="riskTableBody">
@@ -568,131 +463,372 @@
             <div class="selector-container">
                 <div class="selector-card">
                     <h3>Pilih Tahapan</h3>
-                    <select id="tahapSelect" onchange="updateRisiko()">
+                    <select id="tahapSelect" onchange="updateKegiatan()">
                         <option value="">-- Pilih Tahapan --</option>
-                        <option value="Persiapan">Persiapan</option>
-                        <option value="Pelaksanaan">Pelaksanaan</option>
+                        <option value="Persiapan SE2026">Persiapan SE2026</option>
+                    </select>
+                </div>
+                <div class="selector-card">
+                    <h3>Pilih Kegiatan</h3>
+                    <select id="kegiatanSelect" onchange="updateRisiko()">
+                        <option value="">-- Pilih Kegiatan --</option>
                     </select>
                 </div>
                 <div class="selector-card">
                     <h3>Pilih Risiko</h3>
-                    <select id="risikoSelect" onchange="showMitigasi()">
+                    <select id="risikoSelect" onchange="showMitigasiDetail()">
                         <option value="">-- Pilih Risiko --</option>
                     </select>
                 </div>
             </div>
-            <div id="mitigasiResult" class="result-card" style="display: none;">
-                <h3>Strategi Mitigasi</h3>
-                <ul id="mitigasiList" class="mitigation-list">
-                </ul>
+            <div id="mitigasiResult" style="display: none;">
+                <div class="table-container">
+                    <table class="mitigation-table">
+                        <thead>
+                            <tr>
+                                <th style="width: 40px;">No</th>
+                                <th style="width: 150px;">PIC</th>
+                                <th style="width: 200px;">Intervensi Pemda/Stakeholder</th>
+                                <th style="width: 150px;">Lokasi</th>
+                                <th style="width: 300px;">Strategi Mitigasi</th>
+                            </tr>
+                        </thead>
+                        <tbody id="mitigasiTableBody">
+                        </tbody>
+                    </table>
+                </div>
             </div>
         </div>
     </div>
 
     <script>
-        // Data risiko
-        const riskData = [
-            {
-                tahap: "Persiapan",
-                risiko: "Blok Sensus / SLS yang menjadi sampel sudah jenuh atau non respon",
-                kemungkinan: "Sering Terjadi",
-                dampak: "Signifikan",
-                mitigasi: [
-                    "Bersurat ke BPS Provinsi, mengajukan pergantian Blok Sensus/ SLS sampel"
-                ]
-            },
-            {
-                tahap: "Pelaksanaan",
-                risiko: "Aplikasi galat saat pelaksanaan kegiatan",
-                kemungkinan: "Kadang Terjadi",
-                dampak: "Moderat",
-                mitigasi: [
-                    "Menginformasikan galat aplikasi kepada PIC Provinsi"
-                ]
-            },
-            {
-                tahap: "Pelaksanaan",
-                risiko: "Kesulitan menemui responden di wilayah kos-kosan",
-                kemungkinan: "Sering Terjadi",
-                dampak: "Signifikan",
-                mitigasi: [
-                    "Mendatangi responden di jam-jam tertentu yang memungkinkan dia berada di tempat",
-                    "Membuat surat tugas dan surat ke responden menjadi satu lembar kemudian ditinggalkan di dalam kamar kostnya",
-                    "Meminta bantuan dari pemilik kost untuk memberitahukan kepada anak kostnya"
-                ]
-            },
-            {
-                tahap: "Pelaksanaan",
-                risiko: "Kesulitan menemui responden di wilayah perumahan",
-                kemungkinan: "Sering Terjadi",
-                dampak: "Signifikan",
-                mitigasi: [
-                    "Meminta bantuan dari ketua paguyuban perumahan untuk menginfokan kegiatan pencacahan",
-                    "Mendatangi responden di sore/malam hari atau di hari sabtu/minggu, yang kemungkinan besar responden sudah ada di rumah"
-                ]
-            },
-            {
-                tahap: "Pelaksanaan",
-                risiko: "Kesulitan menemui responden di wilayah apartemen",
-                kemungkinan: "Sering Terjadi",
-                dampak: "Signifikan",
-                mitigasi: [
-                    "Meminta bantuan dari pengelola apartemen untuk menginfokan kegiatan pencacahan",
-                    "Mengadakan sosialisasi bagi responden di apartemen via WA (gabung di WA penghuni)",
-                    "Mendatangi apartemen di hari sabtu/minggu untuk melakukan kegiatan pencacahan"
-                ]
-            },
-            {
-                tahap: "Pelaksanaan",
-                risiko: "Kesulitan menemui responden di wilayah apartemen",
-                kemungkinan: "Sering Terjadi",
-                dampak: "Signifikan",
-                mitigasi: [
-                    "Meminta bantuan dari pengelola apartemen untuk menginfokan kegiatan pencacahan",
-                    "Mengadakan sosialisasi bagi responden di apartemen via WA (gabung di WA penghuni)",
-                    "Mendatangi apartemen di hari sabtu/minggu untuk melakukan kegiatan pencacahan"
-                ]
-            },
-            {
-                tahap: "Pelaksanaan",
-                risiko: "Terdapat responden yang tidak bisa ditemui sampai akhir pencacahan",
-                kemungkinan: "Sering Terjadi",
-                dampak: "Signifikan",
-                mitigasi: [
-                    "Mendatangi lagi responden bersama pengawas",
-                    "Membuat Berita Acara Non Respon"
-                ]
-            },
-            {
-                tahap: "Pelaksanaan",
-                risiko: "Terdapat responden yang tidak bisa ditemui sampai akhir pencacahan",
-                kemungkinan: "Sering Terjadi",
-                dampak: "Signifikan",
-                mitigasi: [
-                    "Mendatangi lagi responden bersama pengawas",
-                    "Membuat Berita Acara Non Respon"
-                ]
-            },
-            {
-                tahap: "Pelaksanaan",
-                risiko: "Terdapat responden yang menolak",
-                kemungkinan: "Sering Terjadi",
-                dampak: "Signifikan",
-                mitigasi: [
-                    "Mendatangi lagi responden bersama pengawas dan supervisi dari Kabupaten",
-                    "Membuat Berita Acara Non Respon"
-                ]
-            },
-            {
-                tahap: "Pelaksanaan",
-                risiko: "Probing petugas yang kurang saat mewawancarai responden",
-                kemungkinan: "Kadang Terjadi",
-                dampak: "Signifikan",
-                mitigasi: [
-                    "Memberitahu petugas rincian-rincian tertentu yang perlu probing lebih lanjut dan mendalam",
-                    "Membuat rincian yang harus diikuti oleh probing, supaya hasil wawancaranya lebih berkualitas"
-                ]
-            }
+        // Data risiko berdasarkan tabel yang diberikan
+const riskData = [
+  {
+    tahap: "Persiapan SE2026",
+    kegiatan: "Publisitas SE2026",
+    subKegiatan: "Pemda",
+    risiko: "Pihak Pemda kurang mendukung dalam kegiatan SE2026",
+    kemungkinan: "Sering Terjadi",
+    dampak: "Signifikan",
+    strategi: "1. Meminta video dukungan SE2026 dari kepala daerah dan instansi terkait 2. Meminta kepala daerah membuat surat edaran kepada pengusaha dan masyarakat mengenai kegiatan SE2026",
+    pic: "Bidang Administrasi, Humas dan Manajemen Resiko",
+    intervensi: "Bupati, Wakil Bupati, Kepala Dinas Terkait",
+    lokasi: "Pemda Sleman"
+  },
+  {
+    tahap: "Persiapan SE2026",
+    kegiatan: "Publisitas SE2026",
+    subKegiatan: "Perusahaan/ Usaha",
+    risiko: "Pihak Usaha kurang perduli dengan kegiatan SE2026",
+    kemungkinan: "Sering Terjadi",
+    dampak: "Signifikan",
+    strategi: "1. Testimosi dukungan SE dari usaha penyedia barang jasa yang dipakai oleh BPS Sleman 2. Pembuatan leaflet SE2026 dan diberikan kepada perusahaan UMB terutama untuk responden rutin",
+    pic: "Bidang Administrasi, Humas dan Manajemen Resiko",
+    intervensi: "Dinas/Instansi Terkait, Asosiasi",
+    lokasi: "Perusahaan/usaha di seluruh wilayah Sleman"
+  },
+  {
+    tahap: "Persiapan SE2026",
+    kegiatan: "Publisitas SE2026",
+    subKegiatan: "Masyarakat Umum",
+    risiko: "Pihak Masyarakat kurang perduli dengan kegiatan SE2026",
+    kemungkinan: "Sering Terjadi",
+    dampak: "Signifikan",
+    strategi: "1. Sosialisasi melalui media radio/televisi dan media sosial 2. Meminta dukungan dari dinas komunikasi dan informatika untuk membantu publisitas SE2026 ke masyarakat",
+    pic: "Bidang Administrasi, Humas dan Manajemen Resiko",
+    intervensi: "Dinas/Instansi Terkait, Asosiasi, Kepala Wilayah",
+    lokasi: "Kabupaten Sleman"
+  },
+    {
+    tahap: "Persiapan SE2026",
+    kegiatan: "Rekrutmen Petugas SE2026",
+    subKegiatan: "Kebutuhan Petugas",
+    risiko: "Kesulitan dalam memenuhi kebutuhan mitra yang banyak",
+    kemungkinan: "Kadang Terjadi",
+    dampak: "Signifikan",
+    strategi: "1. Mensosialisasikan rekrutmen sampai ke tingkat Desa/Kalurahan 2. Membuat pengumuman open rekrutmen di website dan medsos resmi BPS Sleman",
+    pic: "Bidang Teknis Pendataan dan Manajemen Lapangan",
+    intervensi: "Kepala Wilayah",
+    lokasi: "Gamping, Mlati, Depok, Ngaglik, Sleman"
+  },
+  {
+    tahap: "Persiapan SE2026",
+    kegiatan: "Rekrutmen Petugas SE2026",
+    subKegiatan: "Penggunaan Mitra Kepka dalam SOBAT",
+    risiko: "Penggunaan tenaga mitra KEPKA dari SOBAT sering terkendala oleh jeda waktu yang lama antara rekrutmen dengan pelaksanaan kegiatan",
+    kemungkinan: "Sangat Sering Terjadi",
+    dampak: "Sangat Signifikan",
+    strategi: "1. Jika terjadi kekurangan mitra dari SOBAT akan dilakukan rekrutmen tambahan menjelang pelaksanaan SE2026 (terbuka/tertutup)",
+    pic: "Bidang Teknis Pendataan dan Manajemen Lapangan",
+    intervensi: "Kepala Wilayah",
+    lokasi: "Kabupaten Sleman"
+  },
+  {
+    tahap: "Persiapan SE2026",
+    kegiatan: "Rekrutmen Petugas SE2026",
+    subKegiatan: "Pengunduran diri calon petugas",
+    risiko: "Mitra mengundurkan diri sebelum pelaksanaan pelatihan",
+    kemungkinan: "Sering Terjadi",
+    dampak: "Signifikan",
+    strategi: "1. Menyiapkan mitra cadangan dengan alokasi 10 persen",
+    pic: "Bidang Teknis Pendataan dan Manajemen Lapangan",
+    intervensi: "-",
+    lokasi: "Kabupaten Sleman"
+  },
+  {
+    tahap: "Persiapan SE2026",
+    kegiatan: "Pelatihan Petugas SE2026",
+    subKegiatan: "Kualitas Hasil Pelatihan Petugas SE2026",
+    risiko: "Kurangnya kualitas mitra",
+    kemungkinan: "Kadang Terjadi",
+    dampak: "Signifikan",
+    strategi: "1. Seleksi petugas mitra dilakukan melalui tahapan wawancara untuk memastikan petugas yang dipakai adalah petugas yang tepat. 2. Mengutamakan petugas mitra yang sudah berpengalaman 3. Menyiapkan Langkah-langkah atau tahapan untuk PPL dan PML dari sebelum mulai lapangan, saat ke lapangan, dan setelah lapangan. 4. Memilih instruktur pelatihan petugas yang berkapasitas dan berkompeten",
+    pic: "Bidang Teknis Pendataan dan Manajemen Lapangan",
+    intervensi: "-",
+    lokasi: "Kabupaten Sleman"
+  },
+    {
+    tahap: "Pelaksanaan SE2026",
+    kegiatan: "Pendataan Lapangan SE2026",
+    subKegiatan: "Penggunaan Aplikasi CAPI",
+    risiko: "Aplikasi galat saat pelaksanaan kegiatan",
+    kemungkinan: "Kadang Terjadi",
+    dampak: "Moderat",
+    strategi: "1. Menginformasikan galat aplikasi kepada PIC Provinsi 2. Mempersiapkan strategi agar petugas tetap bisa ke lapangan ketika galat aplikasi berlangsung lama 3. Selalu update informasi tentang aplikasi terhadap petugas lapangan",
+    pic: "Bidang Pengolahan, Tehnologi Informasi dan Diseminasi",
+    intervensi: "-",
+    lokasi: "Kabupaten Sleman"
+  },
+  {
+    tahap: "Pelaksanaan SE2026",
+    kegiatan: "Pendataan Lapangan SE2026",
+    subKegiatan: "Petugas",
+    risiko: "Petugas melakukan moral hazzard",
+    kemungkinan: "Kadang Terjadi",
+    dampak: "Sangat Signifikan",
+    strategi: "1. Dilakukan pendampingan oleh pengawas secara berkala 2. Dilakukan uji petik terhadap hasil kerja dari petugas pencacah oleh pengawas/pegawai organik 3. Pemberian sanksi yang tegas terhadap petugas yang melakukan moral hazzard",
+    pic: "Bidang Teknis Pendataan dan Manajemen Lapangan",
+    intervensi: "-",
+    lokasi: "Kabupaten Sleman"
+  },
+  {
+    tahap: "Pelaksanaan SE2026",
+    kegiatan: "Pendataan Lapangan SE2026",
+    subKegiatan: "Petugas",
+    risiko: "Petugas tidak dapat menyelesaikan pekerjaan",
+    kemungkinan: "Kadang Terjadi",
+    dampak: "Sangat Signifikan",
+    strategi: "1. Mengalokasikan pekerjaan kepada petugas lain yang sudah menyelesaikan pekerjaannya 2. Mengganti petugas dengan petugas baru yang dilatih terlebih dahulu",
+    pic: "Bidang Teknis Pendataan dan Manajemen Lapangan",
+    intervensi: "-",
+    lokasi: "Kabupaten Sleman"
+  },
+  {
+    tahap: "Pelaksanaan SE2026",
+    kegiatan: "Pendataan Lapangan SE2026",
+    subKegiatan: "Responden",
+    risiko: "Kesulitan menemui responden",
+    kemungkinan: "Sering Terjadi",
+    dampak: "Signifikan",
+    strategi: "1. Meminta bantuan kepada ketua wilayah setempat (Ketua RT, Ketua Paguyuban, dll) 2. Mendatangi responden di sore/malam hari atau di hari sabtu/minggu, yang kemungkinan besar responden sudah ada di rumah 3. Berusaha mendapatkan nomor kontak dari responden untuk membuat janji",
+    pic: "Bidang Teknis Pendataan dan Manajemen Lapangan",
+    intervensi: "Dinas/Instansi Terkait, Asosiasi, Kepala Wilayah",
+    lokasi: "Kabupaten Sleman"
+  },
+  {
+    tahap: "Pelaksanaan SE2026",
+    kegiatan: "Pendataan Lapangan SE2026",
+    subKegiatan: "Responden UMB",
+    risiko: "Tidak melakukan pengisian kuesioner CAWI",
+    kemungkinan: "Sangat Sering Terjadi",
+    dampak: "Sangat Signifikan",
+    strategi: "1. Dilakukan pendataan secara langsung oleh petugas SE2026",
+    pic: "Bidang Teknis Pendataan dan Manajemen Lapangan",
+    intervensi: "Dinas/Instansi Terkait, Asosiasi, Kepala Wilayah",
+    lokasi: "Kabupaten Sleman"
+  },
+  {
+    tahap: "Pelaksanaan SE2026",
+    kegiatan: "Pendataan Lapangan SE2026",
+    subKegiatan: "Perumahan Elite",
+    risiko: "Kesulitan menemui responden di wilayah perumahan Elite",
+    kemungkinan: "Sering Terjadi",
+    dampak: "Signifikan",
+    strategi: "1. Meminta bantuan dari ketua paguyuban perumahan elit untuk menginfokan kegiatan pencacahan 2. Meminta bantuan pada penguasa wilayah(Ketua RT, Kepala Dusun) untuk membantu petugas memperoleh izin masuk ke perumahan elit 3. Meminta Satpam untuk mendampingi petugas saat melakukan pendataan 4. Jika memungkinkan disediakan honor penunjuk jalan",
+    pic: "Bidang Teknis Pendataan dan Manajemen Lapangan",
+    intervensi: "Kepala Wilayah, Ketua Paguyuban",
+    lokasi: "Gamping, Mlati, Depok, Ngaglik, Sleman"
+  },
+  {
+    tahap: "Pelaksanaan SE2026",
+    kegiatan: "Pendataan Lapangan SE2026",
+    subKegiatan: "Apartemen",
+    risiko: "Kesulitan menemui responden di wilayah apartemen",
+    kemungkinan: "Sering Terjadi",
+    dampak: "Signifikan",
+    strategi: "1. Meminta bantuan dari pengelola apartemen untuk menginfokan kegiatan pencacahan 2. Mengadakan sosialisasi bagi responden di apartemen via WA (gabung di WA penghuni) 3. Mendatangi apartemen di hari sabtu/minggu untuk melakukan kegiatan pencacahan 4. Meminta satpam apartemen untuk mendampingi petugas dalam melakukan pendataan 5. Jika memungkinkan disediakan honor penunjuk jalan.",
+    pic: "Bidang Teknis Pendataan dan Manajemen Lapangan",
+    intervensi: "Kepala Wilayah, Pengelola Apartement",
+    lokasi: "Mlati, Depok, Ngaglik"
+  },
+  {
+    tahap: "Pelaksanaan SE2026",
+    kegiatan: "Pendataan Lapangan SE2026",
+    subKegiatan: "Non Respon",
+    risiko: "Terdapat responden yang tidak bisa ditemui sampai akhir pencacahan",
+    kemungkinan: "Sering Terjadi",
+    dampak: "Signifikan",
+    strategi: "1. Mendatangi lagi responden bersama pengawas 2. Membuat Berita Acara Non Respon",
+    pic: "Bidang Teknis Pendataan dan Manajemen Lapangan",
+    intervensi: "Dinas/Instansi Terkait, Asosiasi, Kepala Wilayah",
+    lokasi: "Kabupaten Sleman"
+  },
+  {
+    tahap: "Pelaksanaan SE2026",
+    kegiatan: "Pendataan Lapangan SE2026",
+    subKegiatan: "Non Respon",
+    risiko: "Terdapat responden yang menolak",
+    kemungkinan: "Sering Terjadi",
+    dampak: "Signifikan",
+    strategi: "1. Mendatangi lagi responden bersama pengawas dan supervisi dari Kabupaten/Provinsi 2. Membuat Berita Acara Non Respon",
+    pic: "Bidang Teknis Pendataan dan Manajemen Lapangan",
+    intervensi: "Dinas/Instansi Terkait, Asosiasi, Kepala Wilayah",
+    lokasi: "Kabupaten Sleman"
+  },
+    {
+    tahap: "Pelaksanaan SE2026",
+    kegiatan: "Manajemen Kualitas Data (Pencegahan/ Deteksi)",
+    subKegiatan: "Akurasi Data",
+    risiko: "Kurangnya probing petugas saat melakukan wawancara terhadap responden",
+    kemungkinan: "Kadang Terjadi",
+    dampak: "Signifikan",
+    strategi: "1. Memberitahu petugas rincian-rincian tertentu yang perlu probing lebih lanjut dan mendalam 2. Membuat rincian yang harus diikuti oleh probing, supaya hasil wawancaranya lebih berkualitas",
+    pic: "Bidang Analisis dan Kualitas Data",
+    intervensi: "-",
+    lokasi: "Kabupaten Sleman"
+  },
+  {
+    tahap: "Pelaksanaan SE2026",
+    kegiatan: "Manajemen Kualitas Data (Pencegahan/ Deteksi)",
+    subKegiatan: "Kelengkapan Data",
+    risiko: "Terdapat usaha yang terlewat cacah atau ganda cacah",
+    kemungkinan: "Sering Terjadi",
+    dampak: "Sangat Signifikan",
+    strategi: "1. Melakukan pendampingan awal saat mulai mencacah. 2. Mengadakan Uji Petik untuk wilayah-wilayah yang dicurigai akan terjadi terlewat cacah.",
+    pic: "Bidang Analisis dan Kualitas Data",
+    intervensi: "-",
+    lokasi: "Kabupaten Sleman"
+  },
+  {
+    tahap: "Pelaksanaan SE2026",
+    kegiatan: "Manajemen Kualitas Data (Pencegahan/ Deteksi)",
+    subKegiatan: "Konsistensi",
+    risiko: "Terdapat isian yang tidak konsisten antar pertanyaan",
+    kemungkinan: "Sering Terjadi",
+    dampak: "Sangat Signifikan",
+    strategi: "1. Pengawas melakukan pemeriksaan dengan lebih teliti 2. Koseka melakukan pemeriksaan ulang terhadap isian dokumen secara sampel",
+    pic: "Bidang Analisis dan Kualitas Data",
+    intervensi: "-",
+    lokasi: "Kabupaten Sleman"
+  },
+  {
+    tahap: "Pelaksanaan SE2026",
+    kegiatan: "Manajemen Kualitas Data (Pencegahan/ Deteksi)",
+    subKegiatan: "Pencegahan",
+    risiko: "Petugas membuat kesalahan sampai akhir pendataan",
+    kemungkinan: "Sering Terjadi",
+    dampak: "Sangat Signifikan",
+    strategi: "1. Monitoring Kualitas dilaksanakan pada masa awal pendataan",
+    pic: "Bidang Analisis dan Kualitas Data",
+    intervensi: "-",
+    lokasi: "Kabupaten Sleman"
+  },
+  {
+    tahap: "Pelaksanaan SE2026",
+    kegiatan: "Manajemen Kualitas Data (Pencegahan/ Deteksi)",
+    subKegiatan: "Deteksi",
+    risiko: "Petugas terdeteksi berbuat kesalahan dalam pendataan",
+    kemungkinan: "Kadang Terjadi",
+    dampak: "Sangat Signifikan",
+    strategi: "1. Petugas diminta untuk memperbaiki kesalahan pada semua wilayah yang menjadi tugasnya",
+    pic: "Bidang Analisis dan Kualitas Data",
+    intervensi: "-",
+    lokasi: "Kabupaten Sleman"
+  },
+  {
+    tahap: "Pelaksanaan SE2026",
+    kegiatan: "Monitoring dan Evaluasi",
+    subKegiatan: "Monitoring",
+    risiko: "Dashboard Monitoring dari pusat kurang jelas/detail",
+    kemungkinan: "Sering Terjadi",
+    dampak: "Sangat Signifikan",
+    strategi: "1. Monitoring dibuat lebih rinci dan lebih detail",
+    pic: "Bidang Teknis Pendataan dan Manajemen Lapangan",
+    intervensi: "-",
+    lokasi: "Kabupaten Sleman"
+  },
+  {
+    tahap: "Pelaksanaan SE2026",
+    kegiatan: "Monitoring dan Evaluasi",
+    subKegiatan: "Evaluasi",
+    risiko: "Petugas tidak dapat menepati jadwal pendataan",
+    kemungkinan: "Sering Terjadi",
+    dampak: "Sangat Signifikan",
+    strategi: "1. Dilaksanakan evaluasi kegiatan secara berkala",
+    pic: "Bidang Teknis Pendataan dan Manajemen Lapangan",
+    intervensi: "-",
+    lokasi: "Kabupaten Sleman"
+  },
+  {
+    tahap: "Pengolahan SE2026",
+    kegiatan: "Validasi",
+    subKegiatan: "Validasi data",
+    risiko: "Terdapat data yang harus divalidasi",
+    kemungkinan: "Sering Terjadi",
+    dampak: "Signifikan",
+    strategi: "1. Dilakukan validasi menggunakan tools yang tersedia",
+    pic: "Bidang Pengolahan, Tehnologi Informasi dan Diseminasi",
+    intervensi: "-",
+    lokasi: "Kabupaten Sleman"
+  },
+  {
+    tahap: "Pengolahan SE2026",
+    kegiatan: "Anomali",
+    subKegiatan: "Anomali Data",
+    risiko: "Terdapat anomali data",
+    kemungkinan: "Sering Terjadi",
+    dampak: "Sangat Signifikan",
+    strategi: "1. Melakukan konfirmasi kepada petugas, kemudian memperbaiki isian",
+    pic: "Bidang Pengolahan, Tehnologi Informasi dan Diseminasi",
+    intervensi: "-",
+    lokasi: "Kabupaten Sleman"
+  },
+  {
+    tahap: "Diseminasi SE2026",
+    kegiatan: "Publikasi",
+    subKegiatan: "Publikasi Hasil SE2026",
+    risiko: "Tidak adanya publikasi hasil SE2026",
+    kemungkinan: "Kadang Terjadi",
+    dampak: "Sangat Signifikan",
+    strategi: "1. Menyusun publikasi hasil SE2026 berdasarkan data yang tersedia dan layak untuk dipublikasikan",
+    pic: "Bidang Pengolahan, Tehnologi Informasi dan Diseminasi",
+    intervensi: "-",
+    lokasi: "Kabupaten Sleman"
+  },
+  {
+    tahap: "Diseminasi SE2026",
+    kegiatan: "Ekspose Data Hasil SE2026",
+    subKegiatan: "Ekspose Data",
+    risiko: "Interpretasi data yang salah oleh masyarakat dan berbeda jauh dari yang dikeluarkan BPS, termasuk Hoax dan Misinformasi",
+    kemungkinan: "Sering Terjadi",
+    dampak: "Sangat Signifikan",
+    strategi: "1. Menyusun dan Mensosialisasikan hasil SE2026 dengan berbagai media dan dipastikan untuk menjangkau seluruh masyarakat terutama pelaku usaha. 2. Dibuatkan Peta Ekonomi Wilayah Sleman Untuk menjangkau masyarakat dan pelaku usaha",
+    pic: "Bidang Pengolahan, Tehnologi Informasi dan Diseminasi",
+    intervensi: "-",
+    lokasi: "Kabupaten Sleman"
+  }
+
         ];
 
         // Inisialisasi dashboard
@@ -730,15 +866,17 @@
         // Fungsi untuk memfilter data tabel
         function getFilteredTableData() {
             const tahapFilter = document.getElementById('tableFilterTahap').value;
+            const kegiatanFilter = document.getElementById('tableFilterKegiatan').value;
             const kemungkinanFilter = document.getElementById('tableFilterKemungkinan').value;
             const dampakFilter = document.getElementById('tableFilterDampak').value;
 
             return riskData.filter(risk => {
                 const tahapMatch = !tahapFilter || risk.tahap === tahapFilter;
+                const kegiatanMatch = !kegiatanFilter || risk.kegiatan === kegiatanFilter;
                 const kemungkinanMatch = !kemungkinanFilter || risk.kemungkinan === kemungkinanFilter;
                 const dampakMatch = !dampakFilter || risk.dampak === dampakFilter;
 
-                return tahapMatch && kemungkinanMatch && dampakMatch;
+                return tahapMatch && kegiatanMatch && kemungkinanMatch && dampakMatch;
             });
         }
 
@@ -777,7 +915,6 @@
                 kemungkinanData[risk.kemungkinan] = (kemungkinanData[risk.kemungkinan] || 0) + 1;
             });
 
-            // Destroy existing chart jika ada
             if (kemungkinanChartInstance) kemungkinanChartInstance.destroy();
 
             const kemungkinanCtx = document.getElementById('kemungkinanChart').getContext('2d');
@@ -833,7 +970,6 @@
                 dampakData[risk.dampak] = (dampakData[risk.dampak] || 0) + 1;
             });
 
-            // Destroy existing chart jika ada
             if (dampakChartInstance) dampakChartInstance.destroy();
 
             const dampakCtx = document.getElementById('dampakChart').getContext('2d');
@@ -901,12 +1037,16 @@
                     datasets: [{
                         data: Object.values(kombinasiData),
                         backgroundColor: [
-                            '#c0392b', // Sering & Signifikan (Merah Tua)
-                            '#e67e22', // Sering & Moderat (Orange Tua)
-                            '#f39c12', // Kadang & Signifikan (Orange)
-                            '#3498db', // Kadang & Moderat (Biru)
-                            '#2ecc71'  // Lain-lain (Hijau)
-                        ],
+    '#c0392b', // Sereng & Signifikan (Merah Tua)
+    '#e67e22', // Sereng & Moderat (Oranye Tua)
+    '#9b59b6', // Sereng & Sangat Signifikan (Ungu)
+    '#f39c12', // Kadang & Signifikan (Oranye)
+    '#3498db', // Kadang & Moderat (Biru)
+    '#1abc9c', // Kadang & Sangat Signifikan (Hijau Tosca)
+    '#2ecc71', // Sangat Sering & Signifikan (Hijau)
+    '#e74c3c'  // Sangat Sering & Sangat Signifikan (Merah)
+],
+
                         borderWidth: 3,
                         borderColor: '#fff'
                     }]
@@ -937,46 +1077,41 @@
                 }
             });
         }
-
+        
         // Fungsi untuk mendapatkan label kombinasi
-        function getKombinasiLabel(kemungkinan, dampak) {
-            if (kemungkinan === "Sering Terjadi" && dampak === "Signifikan") {
-                return "Sering & Signifikan";
-            } else if (kemungkinan === "Sering Terjadi" && dampak === "Moderat") {
-                return "Sering & Moderat";
-            } else if (kemungkinan === "Kadang Terjadi" && dampak === "Signifikan") {
-                return "Kadang & Signifikan";
-            } else if (kemungkinan === "Kadang Terjadi" && dampak === "Moderat") {
-                return "Kadang & Moderat";
-            } else {
-                return "Lain-lain";
-            }
-        }
+function getKombinasiLabel(kemungkinan, dampak) {
+    if (kemungkinan === "Sering Terjadi" && dampak === "Signifikan") {
+        return "Sering & Signifikan";
+    } else if (kemungkinan === "Sering Terjadi" && dampak === "Moderat") {
+        return "Sering & Moderat";
+    } else if (kemungkinan === "Sering Terjadi" && dampak === "Sangat Signifikan") {
+        return "Sering & Sangat Signifikan";
+    } else if (kemungkinan === "Kadang Terjadi" && dampak === "Signifikan") {
+        return "Kadang & Signifikan";
+    } else if (kemungkinan === "Kadang Terjadi" && dampak === "Moderat") {
+        return "Kadang & Moderat";
+    } else if (kemungkinan === "Kadang Terjadi" && dampak === "Sangat Signifikan") {
+        return "Kadang & Sangat Signifikan";
+    } else if (kemungkinan === "Sangat Sering Terjadi" && dampak === "Signifikan") {
+        return "Sangat Sering & Signifikan";
+    } else if (kemungkinan === "Sangat Sering Terjadi" && dampak === "Sangat Signifikan") {
+        return "Sangat Sering & Sangat Signifikan";
+    }
+}
 
-        // Mengisi tabel risiko dengan sorting dan filter
+
+
+        // Mengisi tabel risiko
         function populateTable() {
             const tableBody = document.getElementById('riskTableBody');
-            
-            // Get filtered data
             const filteredData = getFilteredTableData();
             
-            // Sort berdasarkan kemungkinan dan dampak
-            const sortedData = [...filteredData].sort((a, b) => {
-                const kemungkinanOrder = { "Sering Terjadi": 2, "Kadang Terjadi": 1 };
-                const dampakOrder = { "Signifikan": 2, "Moderat": 1 };
-                
-                const scoreA = (kemungkinanOrder[a.kemungkinan] || 0) + (dampakOrder[a.dampak] || 0);
-                const scoreB = (kemungkinanOrder[b.kemungkinan] || 0) + (dampakOrder[b.dampak] || 0);
-                
-                return scoreB - scoreA;
-            });
-
             tableBody.innerHTML = '';
             
-            if (sortedData.length === 0) {
+            if (filteredData.length === 0) {
                 const row = document.createElement('tr');
                 row.innerHTML = `
-                    <td colspan="6" style="text-align: center; padding: 30px; color: #7f8c8d; font-style: italic;">
+                    <td colspan="10" style="text-align: center; padding: 30px; color: #7f8c8d; font-style: italic;">
                         Tidak ada data yang sesuai dengan filter yang dipilih
                     </td>
                 `;
@@ -984,34 +1119,22 @@
                 return;
             }
 
-            sortedData.forEach((risk, index) => {
+            filteredData.forEach((risk, index) => {
                 const row = document.createElement('tr');
-                
-                // Create mitigation list HTML
-                const mitigasiHtml = risk.mitigasi.map(mitigation => 
-                    `<li>${mitigation}</li>`
-                ).join('');
-                
                 row.innerHTML = `
                     <td>${index + 1}</td>
                     <td>${risk.tahap}</td>
+                    <td>${risk.kegiatan}</td>
+                    <td>${risk.subKegiatan}</td>
                     <td>${risk.risiko}</td>
                     <td><span class="risk-level ${risk.kemungkinan.toLowerCase().replace(' ', '-')}">${risk.kemungkinan}</span></td>
                     <td>${risk.dampak}</td>
-                    <td><ul class="mitigation-list-cell">${mitigasiHtml}</ul></td>
+                    <td>${risk.strategi}</td>
+                    <td>${risk.pic}</td>
+                    <td>${risk.lokasi}</td>
                 `;
                 tableBody.appendChild(row);
             });
-        }
-
-        function getRiskScore(kemungkinan, dampak) {
-            if (kemungkinan === "Sering Terjadi" && dampak === "Signifikan") {
-                return { level: "Tinggi", class: "sering" };
-            } else if (kemungkinan === "Kadang Terjadi" && dampak === "Moderat") {
-                return { level: "Sedang", class: "kadang" };
-            } else {
-                return { level: "Rendah", class: "kadang" };
-            }
         }
 
         // Mengisi dropdown tahap
@@ -1028,48 +1151,92 @@
             });
         }
 
-        // Update dropdown risiko berdasarkan tahap yang dipilih
-        function updateRisiko() {
+        // Update dropdown kegiatan berdasarkan tahap
+        function updateKegiatan() {
             const tahapSelect = document.getElementById('tahapSelect');
+            const kegiatanSelect = document.getElementById('kegiatanSelect');
             const risikoSelect = document.getElementById('risikoSelect');
             const selectedTahap = tahapSelect.value;
             
+            kegiatanSelect.innerHTML = '<option value="">-- Pilih Kegiatan --</option>';
             risikoSelect.innerHTML = '<option value="">-- Pilih Risiko --</option>';
             
             if (selectedTahap) {
                 const filteredRisks = riskData.filter(risk => risk.tahap === selectedTahap);
+                const uniqueKegiatan = [...new Set(filteredRisks.map(risk => risk.kegiatan))];
+                
+                uniqueKegiatan.forEach(kegiatan => {
+                    const option = document.createElement('option');
+                    option.value = kegiatan;
+                    option.textContent = kegiatan;
+                    kegiatanSelect.appendChild(option);
+                });
+            }
+            
+            document.getElementById('mitigasiResult').style.display = 'none';
+        }
+
+        // Update dropdown risiko berdasarkan tahap dan kegiatan
+        function updateRisiko() {
+            const tahapSelect = document.getElementById('tahapSelect');
+            const kegiatanSelect = document.getElementById('kegiatanSelect');
+            const risikoSelect = document.getElementById('risikoSelect');
+            const selectedTahap = tahapSelect.value;
+            const selectedKegiatan = kegiatanSelect.value;
+            
+            risikoSelect.innerHTML = '<option value="">-- Pilih Risiko --</option>';
+            
+            if (selectedTahap && selectedKegiatan) {
+                const filteredRisks = riskData.filter(risk => 
+                    risk.tahap === selectedTahap && risk.kegiatan === selectedKegiatan
+                );
+                
                 filteredRisks.forEach((risk, index) => {
                     const option = document.createElement('option');
                     option.value = index;
                     option.dataset.tahap = selectedTahap;
+                    option.dataset.kegiatan = selectedKegiatan;
                     option.textContent = risk.risiko;
                     risikoSelect.appendChild(option);
                 });
             }
             
-            // Sembunyikan hasil mitigasi
             document.getElementById('mitigasiResult').style.display = 'none';
         }
 
-        // Menampilkan strategi mitigasi
-        function showMitigasi() {
+        // Menampilkan detail mitigasi dalam bentuk tabel
+        function showMitigasiDetail() {
             const tahapSelect = document.getElementById('tahapSelect');
+            const kegiatanSelect = document.getElementById('kegiatanSelect');
             const risikoSelect = document.getElementById('risikoSelect');
             const mitigasiResult = document.getElementById('mitigasiResult');
-            const mitigasiList = document.getElementById('mitigasiList');
+            const mitigasiTableBody = document.getElementById('mitigasiTableBody');
             
             const selectedTahap = tahapSelect.value;
+            const selectedKegiatan = kegiatanSelect.value;
             const selectedRisikoIndex = risikoSelect.value;
             
-            if (selectedTahap && selectedRisikoIndex !== '') {
-                const filteredRisks = riskData.filter(risk => risk.tahap === selectedTahap);
+            if (selectedTahap && selectedKegiatan && selectedRisikoIndex !== '') {
+                const filteredRisks = riskData.filter(risk => 
+                    risk.tahap === selectedTahap && risk.kegiatan === selectedKegiatan
+                );
                 const selectedRisk = filteredRisks[parseInt(selectedRisikoIndex)];
                 
-                mitigasiList.innerHTML = '';
-                selectedRisk.mitigasi.forEach(mitigation => {
-                    const li = document.createElement('li');
-                    li.textContent = mitigation;
-                    mitigasiList.appendChild(li);
+                mitigasiTableBody.innerHTML = '';
+                
+                // Split strategi berdasarkan nomor (1. 2. dst)
+                const strategies = selectedRisk.strategi.split(/\d+\./).filter(s => s.trim());
+                
+                strategies.forEach((strategy, index) => {
+                    const row = document.createElement('tr');
+                    row.innerHTML = `
+                        <td>${index + 1}</td>
+                        <td>${selectedRisk.pic}</td>
+                        <td>${selectedRisk.intervensi}</td>
+                        <td>${selectedRisk.lokasi}</td>
+                        <td>${strategy.trim()}</td>
+                    `;
+                    mitigasiTableBody.appendChild(row);
                 });
                 
                 mitigasiResult.style.display = 'block';
