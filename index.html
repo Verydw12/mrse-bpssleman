@@ -92,11 +92,30 @@
         }
 
         .charts-container {
-            display: flex;
-            flex-direction: column;
-            gap: 30px;
-            margin-bottom: 30px;
-        }
+    display: flex;
+    flex-wrap: wrap;   /* agar bisa turun ke bawah */
+    gap: 30px;
+    margin-bottom: 30px;
+}
+
+/* Default (HP & Tablet) → tampilan menurun (1 kolom) */
+.chart-card {
+    flex: 1 1 100%;   /* penuh lebar */
+}
+
+/* Laptop & Desktop (>= 992px) → tampil mendatar */
+@media (min-width: 992px) {
+    .chart-card {
+        flex: 1 1 calc(33.333% - 30px);  /* 3 kolom */
+    }
+}
+
+/* Jika mau 2 kolom di tablet landscape (>= 768px) */
+@media (min-width: 768px) and (max-width: 991px) {
+    .chart-card {
+        flex: 1 1 calc(50% - 30px);  /* 2 kolom */
+    }
+}
 
         .chart-filter {
             margin-bottom: 15px;
