@@ -219,7 +219,8 @@
             border-radius: 20px;
             font-weight: 600;
             font-size: 0.9rem;
-            white-space: nowrap;
+            white-space: normal;      /* <-- ubah dari nowrap ke normal */
+    word-break: break-word;   /* <-- tambahkan agar kata panjang turun */
         }
 
         .risk-level.sering {
@@ -397,7 +398,7 @@
         <div id="table" class="tab-content active">
             <div class="filter-container">
     <div>
-        <label>Filter Tahapan:</label>
+        <label>Filter Tahap:</label>
         <select id="tableFilterTahap" class="filter-select" onchange="updateKegiatanFilter()">
             <option value="">Semua Tahapan</option>
             <!-- Opsi tahapan akan diisi dinamis -->
